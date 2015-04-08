@@ -1,0 +1,22 @@
+{
+  "name": "Usato",
+  "version": "1.0.0",
+  "description": "Applicazione desktop per gestione prodotti di libreria usati.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrea Baldan <a.g.baldan@gmail.com>",
+  "window": {
+    "toolbar": false,
+    "width": 1300,
+    "height": 700,
+	"max-width": 1440,
+	"max-height": 900,
+	"position": "center"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^0.19.0"
+  }
+}

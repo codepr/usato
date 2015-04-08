@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html data-ng-app="usatoApp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Usato </title>
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<link rel="stylesheet" href="./css/font-awesome.min.css">
+<link rel="stylesheet" href="./css/app.css">
+<script type="text/javascript" src="./js/lib/angular.min.js"></script>
+<script type="text/javascript" src="./js/lib/angular-resource.min.js"></script>
+<script type="text/javascript" src="./js/lib/angular-route.min.js"></script>
+<script type="text/javascript" src="./js/lib/jquery.min.js"></script>
+<script type="text/javascript" src="./js/lib/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/app.js"></script>
+<script type="text/javascript" src="./js/service/services.js"></script>
+<script type="text/javascript" src="./js/controller/controller.js"></script>
+<script type="text/javascript" src="./js/router/routes.js"></script>
+</head>
+<body class="container" data-ng-controller="usatoAppController">
+<div data-ng-include src="headerSrc"></div>
+<div id="container">
+	<div data-ng-view=""></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<div class="table-container">
+<a class="btn btn-info pull-right" href='#/addcustomer'>Aggiungi</a>
+<h2>Clienti</h2>
+<input type="text" placeholder="Cerca cliente | id | nome | telefono | prenotazione" class="form-control" data-ng-model="searchCustomer">
+<hr>
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Nome</th>
+			<th>Telefono</th>
+			<th>Id</th>
+			<th>Libri in contovendita</th>
+			<th>Venduti</th>
+			<th>Rimuovi</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-ng-repeat="customer in filteredCustomers = (customers | filter:searchCustomer)">
+			<td>{{customer.id}}</td>
+			<td><a href="#/showcustomer/{{customer.id}}">{{customer.name}}</a></td>
+			<td>{{customer.phone}}</td>
+			<td>{{customer.id}}</td>
+			<td>{{customer.isbns.length}}</td>
+			<td>{{customer.sold.length}}</td>
+			<td><i class="fa fa-times fa-2x" ng-click="deleteCustomer($index)"></i></td>
+		</tr>
+		<tr data-ng-show="customer.length <= 0">
+			<td colspan="3" style="text-align:center;">Non ci sono clienti</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	<h2 data-ng-hide="filteredCustomers.length">Nessun cliente</h2>
+</p>
+</div>

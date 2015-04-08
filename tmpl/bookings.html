@@ -1,0 +1,30 @@
+<div class="table-container">
+<h2>Prenotazioni</h2>
+<input type="text" placeholder="Cerca prenotazione | id | titolo | copie | data" class="form-control" data-ng-model="searchBook">
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Titolo</th>
+			<th>Copie</th>
+			<th>Data</th>
+			<th>Acquirente</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-ng-repeat="book in filteredBookings = (bookings | filter:searchBook)">
+			<td>{{book.id}}</td>
+			<td>{{book.title}}</td>
+			<td>{{book.copies}}</td>
+			<td>{{book.date}}</td>
+			<td><a href="#/showcustomer/{{book.reserve}}">{{nameById(book.reserve)}}</a></td>
+		</tr>
+		<tr data-ng-show="bookings.length <= 0">
+			<td colspan="3" style="text-align:center;">Non ci sono prenotazioni</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	<h2 data-ng-hide="filteredBookings.length">Nessuna prenotazione</h2>
+</p>
+</div>

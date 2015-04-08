@@ -1,0 +1,74 @@
+<div class="btn-group pull-right" role="group">
+	<a class="btn btn-success" href="#/addbook/{{currCustomer.id}}">Aggiungi libro</a>
+	<a ng-click="back()" class="btn btn-info" href="javascript:">Indietro</a>
+</div>
+<div class="table-container">
+	<div ng-show="currCustomer">
+		<h2>{{currCustomer.name}}</h2>
+		<hr>
+		<p>ID: {{currCustomer.id}}</p>
+		<p>Telefono: {{currCustomer.phone}}</p>
+		<p>Libri in contovendita: {{currCustomer.isbns.length}}</p>
+		<p>Libri venduti: {{currCustomer.sold.length}}</p>
+		<hr>
+		<h3>Libri in contovendita</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Materia</th>
+					<th>Titolo</th>
+					<th>Vol</th>
+					<th>Autore</th>
+					<th>Editore</th>
+					<th>ISBN</th>
+					<th>Copie</th>
+					<th nowrap>Prezzo €</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="book in filteredBooks = (reservedBooks | filter:search)">
+					<td>{{book.Materia}}</td>
+					<td>{{book.Titolo}}</td>
+					<td>{{book.Volume}}</td>
+					<td>{{book.Autore}}</td>
+					<td>{{book['Casa Editrice']}}</td>
+					<td>{{book.Isbn}}</td>
+					<td>{{getCopies(book.Isbn)}}</td>
+					<td>{{book.Prezzo}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h2>
+		<hr>
+		<p> Totale: {{getTotal()}} €</p>
+		<hr>
+		<h3>Libri venduti</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Materia</th>
+					<th>Titolo</th>
+					<th>Vol</th>
+					<th>Autore</th>
+					<th>Editore</th>
+					<th>ISBN</th>
+					<th nowrap>Prezzo €</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="book in soldBooks">
+					<td>{{book.Materia}}</td>
+					<td>{{book.Titolo}}</td>
+					<td>{{book.Volume}}</td>
+					<td>{{book.Autore}}</td>
+					<td>{{book['Casa Editrice']}}</td>
+					<td>{{book.Isbn}}</td>
+					<td>{{book.Prezzo}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h2>
+		<hr>
+		<p> Totale: {{getTotalSold()}} €</p>
+	</div>
+</div>
