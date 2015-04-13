@@ -1,14 +1,11 @@
 usatoApp.config(function($routeProvider) {
-		$routeProvider
+	$routeProvider
 		.when('/', {
 			templateUrl: 'tmpl/home.html',
 			controller: 'usatoAppController'
 		}).when('/book', {
 			templateUrl: 'tmpl/book.html',
 			controller: 'usatoAppController'
-		}).when('/bookings', {
-			templateUrl: 'tmpl/bookings.html',
-			controller: 'bookingsController'
 		}).when('/addbook/:id', {
 			templateUrl: 'tmpl/addbook.html',
 			controller: 'addBookController'

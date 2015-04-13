@@ -11,20 +11,24 @@
 				<th>Autore</th>
 				<th>Editore</th>
 				<th>ISBN</th>
+				<th>Proprietario</th>
 				<th nowrap>Prezzo €</th>
+				<th nowrap>Sconto %</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr data-ng-repeat="book in filteredBooks = (books | filter:search)">
 				<td>{{book.Materia}}</td>
 				<td>{{book.Titolo}}</td>
-				<td>{{book.Volume}}</td>
+				<td><span ng-show="angular.IsDefined(book.Volume)">{{book.Volume}}</span></td>
 				<td>{{book.Autore}}</td>
-				<td>{{book['Casa Editrice']}}</td>
+				<td>{{book.Casa}}</td>
 				<td>{{book.Isbn}}</td>
+				<td><a href="#/showcustomer/{{book.IdCustomer}}">{{getOwner(book.IdCustomer)}}</a></td>
 				<td>{{book.Prezzo}}</td>
+				<td>{{book.Discount}}</td>
 			</tr>
 		</tbody>
 	</table>
-	<h2 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h2>
+	<h3 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h3>
 </div>

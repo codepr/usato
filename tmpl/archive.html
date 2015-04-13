@@ -1,7 +1,7 @@
 <div class="table-container">
 	<div class="btn-group pull-right">
 		<button class="btn btn-info" ng-click="getTable()">Aggiorna</button>
-		<button class="btn btn-danger" ng-click="">Reset</button>
+		<button class="btn btn-danger" ng-click="resetTable()">Reset</button>
 	</div>
 	<h2>Archivio</h2>
 	<input type="text" placeholder="Cerca libro | ISBN | copie | sconto" class="form-control" data-ng-model="search">
@@ -19,16 +19,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr data-ng-repeat="book in filteredBooks = (books | filter:search)">
+			<tr data-ng-repeat="book in filteredBooks = (store | filter:search)">
 				<td>{{book.Materia}}</td>
 				<td>{{book.Titolo}}</td>
 				<td>{{book.Volume}}</td>
 				<td>{{book.Autore}}</td>
-				<td>{{book['Casa Editrice']}}</td>
+				<td>{{book.Casa}}</td>
 				<td>{{book.Isbn}}</td>
 				<td>{{book.Prezzo}}</td>
 			</tr>
 		</tbody>
 	</table>
-	<h2 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h2>
+	<h3 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h3>
 </div>

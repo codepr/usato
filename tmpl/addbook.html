@@ -1,10 +1,10 @@
 <a class="btn btn-info pull-right" ng-click="back()" href="javascript:">Indietro</a>
 <div class="table-container">
 	<div ng-show="currCustomer">
-		<h2>{{currCustomer.name}}</h2>
+		<h2>{{currCustomer.Nome}}</h2>
 		<hr>
 		<h3>Libri in contovendita</h3>
-		<table class="table">
+		<table class="table" ng-show="nBook">
 			<thead>
 				<tr>
 					<th>Materia</th>
@@ -17,53 +17,60 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr data-ng-repeat="book in filteredBooks = (reservedBooks | filter:search)">
+			<tr>
 					<td>{{book.Materia}}</td>
 					<td>{{book.Titolo}}</td>
 					<td>{{book.Volume}}</td>
 					<td>{{book.Autore}}</td>
-					<td>{{book['Casa Editrice']}}</td>
+					<td>{{book.Casa}}</td>
 					<td>{{book.Isbn}}</td>
 					<td>{{book.Prezzo}} €</td>
 				</tr>
 			</tbody>
 		</table>
-		<form class="form-horizontal" role="form">
-			<fieldset>
-				<legend>Nuovo libro</legend>
-				<div class="form-group">
-					<label for="inputIsbn" class="col-md-1 control-label">ISBN</label>
-					<div class="col-lg-7">
-						<input type="text" class="form-control" id="inputIsbn" placeholder="ISBN">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="inputTitle" class="col-md-1 control-label">Titolo</label>
-					<div class="col-lg-7">
-						<input type="text" class="form-control" id="inputTitle" placeholder="Titolo">
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="inputSubj" class="col-md-1 control-label">Materia</label>
-					<div class="col-md-3">
-						<input type="text" class="form-control" id="inputSubj" placeholder="Materia">
-					</div>
-					<label for="inputAuth" class="col-md-1 control-label">Autore</label>
-					<div class="col-md-3">
-						<input type="text" class="form-control" id="inputAuth" placeholder="Autore">
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="inputEdit" class="col-md-1 control-label">Editore</label>
-					<div class="col-md-3">
-						<input type="text" class="form-control" id="inputEdit" placeholder="Editore">
-					</div>
-					<label for="inputPrice" class="col-md-1 control-label">Prezzo</label>
-					<div class="col-md-3">
-						<input type="text" class="form-control" id="inputPrice" placeholder="Prezzo">
-					</div>
-				</div>
-			</fieldset>
+		<form class="form-horizontal" role="form">  
+		  <fieldset>
+			<legend>Nuovo libro</legend>
+            <div class="form-group">
+              <label for="inputTitle" class="col-md-1 control-label">Titolo</label>
+              <div class="col-lg-7">
+				  <input type="text" class="form-control" id="inputTitle" placeholder="Titolo" ng-model="newBook.Titolo" value="{{newBook.Titolo}}">
+              </div>
+            </div>
+    		<div class="form-group row">
+			  <label for="inputIsbn" class="col-md-1 control-label">ISBN</label>
+			  <div class="col-md-3">
+				  <input type="text" class="form-control" id="inputIsbn" placeholder="ISBN" ng-model="newBook.Isbn">
+			  </div>
+			  <label class="col-md-1 control-label" for="inputDisc">Sconto</label>
+			  <div class="col-md-3">
+				<input class="form-control" type="text" id="inputDisc" placeholder="Sconto da applicare" ng-model="newBook.Discount" value="{{newBook.Discount}}">
+			  </div>
+			</div>
+			<div class="form-group row">
+			  <label for="inputSubj" class="col-md-1 control-label">Materia</label>
+			  <div class="col-md-3">
+				<input type="text" class="form-control" id="inputSubj" placeholder="Materia" ng-model="newBook.Materia" value="{{newBook.Materia}}">
+			  </div>
+			  <label for="inputAuth" class="col-md-1 control-label">Autore</label>
+			  <div class="col-md-3">
+				  <input type="text" class="form-control" id="inputAuth" placeholder="Autore" ng-model="newBook.Autore" value="{{newBook.Autore}}">
+			  </div>
+			</div>
+			<div class="form-group row">
+			  <label for="inputEdit" class="col-md-1 control-label">Editore</label>
+			  <div class="col-md-3">
+				<input type="text" class="form-control" id="inputEdit" placeholder="Editore" ng-model="newBook.Casa" value="{{newBook.Casa}}">
+			  </div>
+			  <label for="inputPrice" class="col-md-1 control-label">Prezzo</label>
+			  <div class="col-md-3">
+				<input type="text" class="form-control" id="inputPrice" placeholder="Prezzo" ng-model="newBook.Prezzo" value="{{newBook.Prezzo}}">
+			  </div>
+			</div>
+			<div class="form-group">
+			  <button class="btn btn-success" ng-click="addBookToCustomer(newBook, currCustomer.id)">aggiungi</button>
+			</div>
+		  </fieldset>
 		</form>
 	</div>
 </div>

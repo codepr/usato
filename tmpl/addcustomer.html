@@ -1,5 +1,5 @@
 <a ng-click="back()" class="btn btn-info pull-right" href="javascript:">Indietro</a>
-<div class="table-container">
+<div class="table-container" ng-controller="addCustomerController">
 	<h2>Nuovo cliente</h2>
 	<hr>
 	<form class="form-horizontal">
@@ -7,14 +7,17 @@
 			<div class="form-group">
 				<label for="inputName" class="col-md-1 control-label">Nome</label>
 				<div class="col-lg-8">
-					<input type="text" class="form-control" id="inputName" placeholder="Nome">
+					<input type="text" class="form-control" id="inputName" placeholder="Nome" ng-model="customer.name">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="inputPhone" class="col-md-1 control-label">Telefono</label>
 				<div class="col-lg-8">
-					<input type="text" class="form-control" id="inputPhone" placeholder="Telefono">
+					<input type="text" class="form-control" id="inputPhone" placeholder="Telefono" ng-model="customer.phone">
 				</div>
+			</div>
+			<div class="form-group">
+			  <button class="btn btn-success pull-right" type="button" ng-click="addCustomer(customer.name, customer.phone)">aggiungi</button>
 			</div>
 		</fieldset>
 	</form>

@@ -11,9 +11,9 @@
     "toolbar": false,
     "width": 1300,
     "height": 700,
-	"max-width": 1440,
-	"max-height": 900,
-	"position": "center"
+    "max-width": 1440,
+    "max-height": 900,
+    "position": "center"
   },
   "license": "MIT",
   "dependencies": {

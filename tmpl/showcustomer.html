@@ -4,12 +4,12 @@
 </div>
 <div class="table-container">
 	<div ng-show="currCustomer">
-		<h2>{{currCustomer.name}}</h2>
+	  <h2>{{currCustomer.Nome}}</h2>
 		<hr>
 		<p>ID: {{currCustomer.id}}</p>
-		<p>Telefono: {{currCustomer.phone}}</p>
-		<p>Libri in contovendita: {{currCustomer.isbns.length}}</p>
-		<p>Libri venduti: {{currCustomer.sold.length}}</p>
+		<p>Telefono: {{currCustomer.Telefono}}</p>
+	    <p>Libri in contovendita: {{reservedBooks.length}}</p>
+		<!-- <p>Libri venduti: {{currCustomer.sold.length}}</p> -->
 		<hr>
 		<h3>Libri in contovendita</h3>
 		<table class="table">
@@ -21,8 +21,8 @@
 					<th>Autore</th>
 					<th>Editore</th>
 					<th>ISBN</th>
-					<th>Copie</th>
 					<th nowrap>Prezzo €</th>
+					<th nowrap>Sconto %</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,14 +31,14 @@
 					<td>{{book.Titolo}}</td>
 					<td>{{book.Volume}}</td>
 					<td>{{book.Autore}}</td>
-					<td>{{book['Casa Editrice']}}</td>
+					<td>{{book.Casa}}</td>
 					<td>{{book.Isbn}}</td>
-					<td>{{getCopies(book.Isbn)}}</td>
 					<td>{{book.Prezzo}}</td>
+					<td>{{book.Discount}}</td>
 				</tr>
 			</tbody>
 		</table>
-		<h2 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h2>
+		<h4 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro in contovendita</h4>
 		<hr>
 		<p> Totale: {{getTotal()}} €</p>
 		<hr>
@@ -61,14 +61,14 @@
 					<td>{{book.Titolo}}</td>
 					<td>{{book.Volume}}</td>
 					<td>{{book.Autore}}</td>
-					<td>{{book['Casa Editrice']}}</td>
+					<td>{{book.Casa}}</td>
 					<td>{{book.Isbn}}</td>
 					<td>{{book.Prezzo}}</td>
 				</tr>
 			</tbody>
 		</table>
-		<h2 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h2>
+		<h4 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro venduto</h4>
 		<hr>
-		<p> Totale: {{getTotalSold()}} €</p>
+		<!-- <p> Totale: {{getTotalSold()}} €</p> -->
 	</div>
 </div>

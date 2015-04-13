@@ -1,10 +1,21 @@
-NOTE:
+#+TITLE: Note applicazione Usato
+#+AUTHOR: Andrea
+#+DATE: 13-04-2015
 
->> NO DB ONLINE / SCRAPING
->> Traccia dei proprietari originali
->> ID proprietari originali
->> ID ricevuta
->> txt/pdf => json (??)
->> css pagina print
->> applicazione sconti
->> 75% in conto vendita al proprietario originale
+* No db online
+** scrape dai siti scolatici
+
+* Traccia dei proprietari originali
+
+* ID proprietari originali
+
+* ID ricevuta
+
+* txt/pdf => json (??)
+
+* css pagina print
+
+* applicazione sconti
+
+* 75% in conto vendita al proprietario originale
+
