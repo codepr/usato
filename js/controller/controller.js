@@ -1,6 +1,6 @@
 var http = require('http'),
-fs = require('fs'),
-	db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024);
+    fs = require('fs'),
+    db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024);
 // create tables
 db.transaction(function(tx) {
 	// developement
@@ -13,7 +13,7 @@ db.transaction(function(tx) {
 	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
 				  'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-				  'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER)');
+				  'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
 });
 // Download html of a URL specified page
 function download(url, callback) {
@@ -48,6 +48,12 @@ usatoApp.controller('usatoAppController', function($scope, usatoAppFactory, usat
 	// loada books into scope variable
 	usatoAppFactory.books().then(function(b) {
 		$scope.books = b;
+	});
+	// listen for event 'refresh' and refresh customers list
+	$scope.$on('refresh', function(event) {
+		usatoAppCustomerFactory.get().then(function(c) {
+			$scope.customers = c;
+		});
 	});
 	// set limit to 10 results for home page
 	$scope.quantity = 10;
@@ -184,7 +190,7 @@ usatoApp.controller('usatoAppController', function($scope, usatoAppFactory, usat
 					db.transaction(function(tx) {
 						for(var i = 0; i < tbObj.length; i++) {
 							tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES(?, ?, ?, ?, ?, ?, ?)',
-										  [tbObj[i].Materia,tbObj[i].Isbn,tbObj[i].Autore,tbObj[i].Titolo,tbObj[i].Volume,tbObj[i]['Casa Editrice'],tbObj[i].Prezzo]);
+								[tbObj[i].Materia,tbObj[i].Isbn,tbObj[i].Autore,tbObj[i].Titolo,tbObj[i].Volume,tbObj[i]['Casa Editrice'],tbObj[i].Prezzo]);
 						}
 						// reload books into scope variable
 						usatoAppFactory.get().then(function(b) {
@@ -202,15 +208,32 @@ usatoApp.controller('customersController', function($scope, usatoAppCustomerFact
 	usatoAppCustomerFactory.get().then(function(c) {
 		$scope.customers = c;
 	});	
+	usatoAppCustomerFactory.sold().then(function(s) {
+		$scope.soldBooks = s;
+	});
 	// remove customer and save it persistencly
 	$scope.deleteCustomer = function(identifier) {
 		db.transaction(function(tx) {
 			tx.executeSql('DELETE FROM CUSTOMERS WHERE id = ?', [identifier]);
 		});
 		// reload customers
-		usatoAppCustomerFactory.get().then(function(c) {
-			$scope.customers = c;
-		});
+		$scope.$emit('refresh');
+		// usatoAppCustomerFactory.get().then(function(c) {
+		// 	$scope.customers = c;
+		// });
+	};
+	// check if that user have sold all his books
+	$scope.allSold = function(idc) {
+		var sold = 0,
+			tots = 0;
+		for (var i = 0, len = $scope.soldBooks.length; i < len; i++) 
+			if($scope.soldBooks[i].IdCustomer == idc && $scope.soldBooks[i].Sold == 1)
+				sold++;
+		for (var j = 0, len = $scope.books.length; j < len; j++) {
+			if($scope.books[j].IdCustomer == idc)
+				tots++;
+		}
+		return sold === tots;
 	};
 });
 
@@ -219,8 +242,16 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, $q,
 	usatoAppFactory.booksById($routeParams.id).then(function(r) {
 		$scope.reservedBooks = r;
 	});
-	// $scope.getReserved(toArr($scope.currCustomer.isbns));
-	// $scope.getSold($scope.currCustomer.sold);
+	// remove a copy of book for the current customer
+	$scope.deleteCopy = function(idc) {
+		db.transaction(function(tx) {
+			tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
+		});
+		// reload books
+		usatoAppFactory.booksById($routeParams.id).then(function(r) {
+			$scope.reservedBooks = r;
+		});
+	}
 	// get total cost of reserved books
 	$scope.getTotal = function() {
 		var total = 0;
@@ -251,12 +282,24 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, $q,
 });
 
 usatoApp.controller('addBookController', function($scope, $routeParams) {
+	$scope.$watch('newBook.Isbn', function(isbnValue) {
+		for(var i = 0; i < $scope.store.length; i++) {
+			if($scope.store[i].Isbn == isbnValue) {
+				// copy object into newBook obj except Isbn, or it will cause a loop and input box would became unchangable
+				$scope.newBook.Titolo = $scope.store[i].Titolo;
+				$scope.newBook.Autore = $scope.store[i].Autore;
+				$scope.newBook.Prezzo = $scope.store[i].Prezzo;
+				$scope.newBook.Materia = $scope.store[i].Materia;
+				$scope.newBook.Casa = $scope.store[i].Casa;
+			}
+		}
+	});
 	$scope.getCustomerById($routeParams.id);
 	// add new book to customer by id
 	$scope.addBookToCustomer = function(newBook, id) {
 		db.transaction(function(tx) {
 			// control presence in customersbooks and insert or update
-			tx.executeSql('INSERT INTO BOOKS (Isbn, IdCustomer, Discount) VALUES (?, ?, ?)', [newBook.Isbn, id, newBook.Discount]);
+			tx.executeSql('INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES (?, ?, ?, ?)', [newBook.Isbn, id, newBook.Discount, 0]);
 			// control presence in store and insert based upon the results of the query
 			tx.executeSql('SELECT id FROM STORE WHERE Isbn = ?', [newBook.Isbn], function(tx, results) {
 				if(!results.rows.length)
@@ -273,5 +316,7 @@ usatoApp.controller('addCustomerController', function($scope) {
 		db.transaction(function(tx) {
 			tx.executeSql('INSERT INTO CUSTOMERS (Nome, Telefono) VALUES (?, ?)', [name, phone]);
 		});	
+		// refresh customers scope variable
+		$scope.$emit('refresh');
 	};
 });

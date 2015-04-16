@@ -23,6 +23,7 @@
 					<th>ISBN</th>
 					<th nowrap>Prezzo €</th>
 					<th nowrap>Sconto %</th>
+					<th>Rimuovi</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -35,6 +36,7 @@
 					<td>{{book.Isbn}}</td>
 					<td>{{book.Prezzo}}</td>
 					<td>{{book.Discount}}</td>
+					<td><i class="fa fa-times fa-2x" ng-click="deleteCopy(book.id)"></i></td>
 				</tr>
 			</tbody>
 		</table>
@@ -53,6 +55,8 @@
 					<th>Editore</th>
 					<th>ISBN</th>
 					<th nowrap>Prezzo €</th>
+					<th nowrap>Sconto %</th>
+					<th>Ripristina</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -64,6 +68,8 @@
 					<td>{{book.Casa}}</td>
 					<td>{{book.Isbn}}</td>
 					<td>{{book.Prezzo}}</td>
+					<td>{{book.Discount}}</td>
+					<td><i class="fa fa-repeat fa-2x" ng-click="restore(book.Id)"></i></td>
 				</tr>
 			</tbody>
 		</table>
