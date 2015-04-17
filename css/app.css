@@ -2,7 +2,7 @@
 body {
 	font-family: Delius;
     padding-top: 30px;
-	background: radial-gradient(ellipse at center, #ffffff 0%, #c5c5c5 100%);
+	background: radial-gradient(ellipse at center, #ffffff 0%, #c5c5f5 100%);
 	/* background: radial-gradient(ellipse at center, #e6e6e6 0%,#030611 100%); */
 	/* color: #c8c8c8; */
 }
@@ -12,6 +12,8 @@ body {
 .table-container {
 	min-height: 700px
 }
+.table > tbody > tr > td { vertical-align: middle; }
+/* input[type="text"] {box-shadow:2px 3px 8px #777;} */
 .thumb-big {
     height: 180px;
 	box-shadow:2px 6px 8px 2px #777;
@@ -19,7 +21,7 @@ body {
 .books-list {
     text-align: center;
 }
-.sold { background: rgba(0, 125, 0, 0.6); }
+.sold { /*background: linear-gradient(to Right, rgba(255,255,255,.2) 0%, rgba(0, 100, 14, .2) 100%);*/ background: rgba(20,176,65, .2)}
 .availability {
     padding: 9px;
     font-size: 12px;
@@ -42,6 +44,7 @@ p {
 i {
 	color:#ffffff;
 }
+i.fa.fa-repeat { color:rgb(20,176,65); }
 i.fa.fa-times {
 	color:#f00;
 }

@@ -2,10 +2,10 @@ usatoApp.config(function($routeProvider) {
 	$routeProvider
 		.when('/', {
 			templateUrl: 'tmpl/home.html',
-			controller: 'usatoAppController'
+			controller: 'MainController'
 		}).when('/book', {
 			templateUrl: 'tmpl/book.html',
-			controller: 'usatoAppController'
+			controller: 'MainController'
 		}).when('/addbook/:id', {
 			templateUrl: 'tmpl/addbook.html',
 			controller: 'addBookController'
@@ -20,7 +20,7 @@ usatoApp.config(function($routeProvider) {
 			controller: 'showCustomerController'
 		}).when('/archive', {
 			templateUrl: 'tmpl/archive.html',
-			controller: 'usatoAppController'
+			controller: 'archiveController'
 		}).otherwise({
 			redirectTo: '/'
 		});

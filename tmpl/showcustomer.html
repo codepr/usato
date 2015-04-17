@@ -1,15 +1,16 @@
 <div class="btn-group pull-right" role="group">
 	<a class="btn btn-success" href="#/addbook/{{currCustomer.id}}">Aggiungi libro</a>
+	<a class="btn btn-warning" href="#/print">Stampa</a>
 	<a ng-click="back()" class="btn btn-info" href="javascript:">Indietro</a>
 </div>
 <div class="table-container">
 	<div ng-show="currCustomer">
-	  <h2>{{currCustomer.Nome}}</h2>
+		<h2>{{currCustomer.Nome}}</h2>
 		<hr>
 		<p>ID: {{currCustomer.id}}</p>
 		<p>Telefono: {{currCustomer.Telefono}}</p>
-	    <p>Libri in contovendita: {{reservedBooks.length}}</p>
-		<!-- <p>Libri venduti: {{currCustomer.sold.length}}</p> -->
+		<p>Libri in contovendita: {{reservedBooks.length}}</p>
+		<p>Libri venduti: {{soldBooksByMe.length || 0}}</p>
 		<hr>
 		<h3>Libri in contovendita</h3>
 		<table class="table">
@@ -23,6 +24,7 @@
 					<th>ISBN</th>
 					<th nowrap>Prezzo €</th>
 					<th nowrap>Sconto %</th>
+					<th nowrap>Scontato €</th>
 					<th>Rimuovi</th>
 				</tr>
 			</thead>
@@ -36,6 +38,7 @@
 					<td>{{book.Isbn}}</td>
 					<td>{{book.Prezzo}}</td>
 					<td>{{book.Discount}}</td>
+					<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
 					<td><i class="fa fa-times fa-2x" ng-click="deleteCopy(book.id)"></i></td>
 				</tr>
 			</tbody>
@@ -44,37 +47,41 @@
 		<hr>
 		<p> Totale: {{getTotal()}} €</p>
 		<hr>
-		<h3>Libri venduti</h3>
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Materia</th>
-					<th>Titolo</th>
-					<th>Vol</th>
-					<th>Autore</th>
-					<th>Editore</th>
-					<th>ISBN</th>
-					<th nowrap>Prezzo €</th>
-					<th nowrap>Sconto %</th>
-					<th>Ripristina</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr data-ng-repeat="book in soldBooks">
-					<td>{{book.Materia}}</td>
-					<td>{{book.Titolo}}</td>
-					<td>{{book.Volume}}</td>
-					<td>{{book.Autore}}</td>
-					<td>{{book.Casa}}</td>
-					<td>{{book.Isbn}}</td>
-					<td>{{book.Prezzo}}</td>
-					<td>{{book.Discount}}</td>
-					<td><i class="fa fa-repeat fa-2x" ng-click="restore(book.Id)"></i></td>
-				</tr>
-			</tbody>
-		</table>
-		<h4 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro venduto</h4>
-		<hr>
-		<!-- <p> Totale: {{getTotalSold()}} €</p> -->
+		<div ng-show="soldBooksByMe.length > 0">
+			<h3>Libri venduti</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Materia</th>
+						<th>Titolo</th>
+						<th>Vol</th>
+						<th>Autore</th>
+						<th>Editore</th>
+						<th>ISBN</th>
+						<th nowrap>Prezzo €</th>
+						<th nowrap>Sconto %</th>
+						<th nowrap>Scontato €</th>
+						<th>Ripristina</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="book in soldBooksByMe">
+						<td>{{book.Materia}}</td>
+						<td>{{book.Titolo}}</td>
+						<td>{{book.Volume}}</td>
+						<td>{{book.Autore}}</td>
+						<td>{{book.Casa}}</td>
+						<td>{{book.Isbn}}</td>
+						<td>{{book.Prezzo}}</td>
+						<td>{{book.Discount}}</td>
+						<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
+						<td><i class="fa fa-repeat fa-2x" ng-click="restore(book.id)"></i></td>
+					</tr>
+				</tbody>
+			</table>
+			<h4 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro venduto</h4>
+			<hr>
+			<p ng-show="soldBooksByMe.length > 0">Totale: {{getTotalSold()}} €</p>
+		</div>
 	</div>
 </div>
