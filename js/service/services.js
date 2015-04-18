@@ -137,6 +137,9 @@ usatoApp.factory('usatoAppCustomerFactory', function($resource, $q) {
 				});
 			});
 			return deferred.promise;
+		},
+		discount: function(bk, ds) {
+			return parseFloat(bk.replace(/,/, '.')) - (parseFloat(bk.replace(/,/, '.')) * (parseFloat(ds) * 0.01));
 		}
 	};
 });

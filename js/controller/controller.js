@@ -15,7 +15,7 @@ db.transaction(function(tx) {
 		'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
 });
 // main controller
-usatoApp.controller('MainController', function($scope, utility, usatoAppFactory, usatoAppCustomerFactory, $location, $q) {
+usatoApp.controller('MainController', function($scope, utility, usatoAppFactory, usatoAppCustomerFactory, $location) {
 	// load header template
 	$scope.headerSrc = './tmpl/header.html';
 	//load books into scope variable
@@ -74,7 +74,10 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
 			}
 		}
 	};
-
+	// get discount for a given book
+	$scope.getDiscount = function(bk, ds) {
+		return usatoAppCustomerFactory.discount(bk,ds);
+	};
 	// sell selected book
 	$scope.sell = function(bid) {
 		db.transaction(function(tx) {
@@ -110,7 +113,7 @@ usatoApp.controller('customersController', function($scope) {
 	};
 });
 
-usatoApp.controller('showCustomerController', function($scope, $routeParams, $q, usatoAppCustomerFactory) {
+usatoApp.controller('showCustomerController', function($scope, $routeParams, usatoAppCustomerFactory) {
 	$scope.getCustomerById($routeParams.id);
 	usatoAppCustomerFactory.booksById($routeParams.id).then(function(r) {
 		$scope.reservedBooks = r;
@@ -143,29 +146,33 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, $q,
 	};
 	// get total cost of reserved books
 	$scope.getTotal = function() {
-		var total = 0;
+		var TOT = {total: 0, dtotal: 0};
 		var rbooks = $scope.reservedBooks;
 		for(var i = 0; i < rbooks.length; i++) {
-			total += parseFloat(rbooks[i].Prezzo.replace(/,/, '.'));
+			TOT.total += parseFloat(rbooks[i].Prezzo.replace(/,/, '.'));
+			TOT.dtotal += parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(rbooks[i].Discount) * 0.01));
 		}
-		return Math.round(total * 100) / 100;
+		return TOT;
 	};
 	// get total cost of sold books
 	$scope.getTotalSold = function() {
-		var total = 0;
-		for(var i = 0; i < $scope.soldBooksByMe.length; i++) {
-			total += parseFloat($scope.soldBooksByMe[i].Prezzo.replace(/,/, '.'));
+		var TOT = {total: 0, dtotal: 0};
+		var sbooks = $scope.soldBooksByMe;
+		for(var i = 0; i < sbooks.length; i++) {
+			TOT.total += parseFloat(sbooks[i].Prezzo.replace(/,/, '.'));
+			TOT.dtotal += parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(sbooks[i].Discount) * 0.01));
 		}
-		return Math.round(total * 100) / 100;
+		return TOT;
 	};
 	// get discount for a given book
 	$scope.getDiscount = function(bk, ds) {
-		return parseFloat(bk) - (parseFloat(bk) * (parseFloat(ds) * 0.01));
+		return usatoAppCustomerFactory.discount(bk,ds);
 	};
 });
 
 usatoApp.controller('addBookController', function($scope, $routeParams) {
 	$scope.$emit('refreshStore');
+	// watch for change on isbn field in addbook form
 	$scope.$watch('newBook.Isbn', function(isbnValue) {
 		for(var i = 0; i < $scope.store.length; i++) {
 			if($scope.store[i].Isbn == isbnValue) {
@@ -214,8 +221,9 @@ usatoApp.controller('archiveController', function($scope, utility) {
 			var $ = cheerio.load(data);
 			var links = $('table a');
 			$(links).each(function(i, link) {
-				if(/..\/public\/GV_290514/.test($(link).attr('href')))
-				url.push("http://www.giuseppeveronese.it/" + $(link).attr('href').substring(3));
+				if(/..\/public\/GV_290514/.test($(link).attr('href'))) {
+					url.push("http://www.giuseppeveronese.it/" + $(link).attr('href').substring(3));
+				}
 			});
 		}
 	});

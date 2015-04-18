@@ -45,7 +45,7 @@
 		</table>
 		<h4 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro in contovendita</h4>
 		<hr>
-		<p> Totale: {{getTotal()}} €</p>
+		<p> Totale: {{getTotal().total}} €</p><p>Scontato: {{getTotal().dtotal}} €</p>
 		<hr>
 		<div ng-show="soldBooksByMe.length > 0">
 			<h3>Libri venduti</h3>
@@ -81,7 +81,7 @@
 			</table>
 			<h4 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro venduto</h4>
 			<hr>
-			<p ng-show="soldBooksByMe.length > 0">Totale: {{getTotalSold()}} €</p>
+			<p ng-show="soldBooksByMe.length > 0">Totale: {{getTotalSold().total}} €</p><p>Scontato: {{getTotalSold().dtotal}}</p>
 		</div>
 	</div>
 </div>

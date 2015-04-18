@@ -14,6 +14,7 @@
 				<th>Proprietario</th>
 				<th nowrap>Prezzo €</th>
 				<th nowrap>Sconto %</th>
+				<th nowrap>Scontato €</th>
 				<th>Vendi</th>
 			</tr>
 		</thead>
@@ -28,6 +29,7 @@
 				<td><a href="#/showcustomer/{{book.IdCustomer}}">{{getOwner(book.IdCustomer)}}</a></td>
 				<td>{{book.Prezzo}}</td>
 				<td>{{book.Discount}}</td>
+				<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
 				<td><i class="fa fa-repeat fa-2x" ng-click="sell(book.id)"></i></td>
 			</tr>
 		</tbody>

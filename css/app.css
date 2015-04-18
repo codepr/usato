@@ -2,15 +2,18 @@
 body {
 	font-family: Delius;
     padding-top: 30px;
-	background: radial-gradient(ellipse at center, #ffffff 0%, #c5c5f5 100%);
-	/* background: radial-gradient(ellipse at center, #e6e6e6 0%,#030611 100%); */
+	background: url('../img/pile.png') no-repeat;
+	background-size:12%;
+	background-position:bottom right;
+	/* background-position: center center; */
+	/* background: radial-gradient(ellipse at center, #ffffff 0%, #c5c5f5 100%); */
 	/* color: #c8c8c8; */
 }
 #container {
     padding: 35px 0px;
 }
 .table-container {
-	min-height: 700px
+	min-height: 560px
 }
 .table > tbody > tr > td { vertical-align: middle; }
 /* input[type="text"] {box-shadow:2px 3px 8px #777;} */
