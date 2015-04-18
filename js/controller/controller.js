@@ -89,7 +89,7 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
 		$scope.$emit('refreshBooks');
 	};
 });
-// maybe useless?
+// customers managing and CRUD
 usatoApp.controller('customersController', function($scope) {
 	$scope.$emit('refreshBooks');
 	// remove customer and save it persistencly
@@ -112,7 +112,7 @@ usatoApp.controller('customersController', function($scope) {
 		return tots > 0;
 	};
 });
-
+// single customer managing, access granted by id
 usatoApp.controller('showCustomerController', function($scope, $routeParams, usatoAppCustomerFactory) {
 	$scope.getCustomerById($routeParams.id);
 	usatoAppCustomerFactory.booksById($routeParams.id).then(function(r) {
@@ -173,7 +173,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 		return usatoAppCustomerFactory.discount(bk,ds);
 	};
 });
-
+// book addition management, form validations
 usatoApp.controller('addBookController', function($scope, $routeParams) {
 	$('#success-alert').hide();
 	$scope.$emit('refreshStore');
@@ -190,6 +190,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams) {
 			}
 		}
 	});
+	// set currCustomer
 	$scope.getCustomerById($routeParams.id);
 	// add new book to customer by id
 	$scope.addBookToCustomer = function(newBook, id) {
@@ -210,7 +211,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams) {
 		});
 	};
 });
-
+// customer addition managing and form validations
 usatoApp.controller('addCustomerController', function($scope, $location) {
 	// add new costumer from post data
 	$scope.addCustomer = function(name, phone) {
@@ -292,6 +293,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
 			})
 		}
 	};
+	// development function ****** REMOVE ******
 	$scope.getLinks = function() {
 		var cheerio = require('cheerio');
 		utility.download('http://www.giuseppeveronese.it/segreteria/libri_testo.aspx', function(data) {
