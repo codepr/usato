@@ -4,21 +4,20 @@
 	<hr>
 	<form class="form-horizontal">
 		<fieldset>
-			<div class="form-group">
+			<div class="form-group row">
 				<label for="inputName" class="col-md-1 control-label">Nome</label>
-				<div class="col-lg-8">
+				<div class="col-md-2">
 					<input type="text" class="form-control" id="inputName" placeholder="Nome" ng-model="customer.name">
 				</div>
-			</div>
-			<div class="form-group">
 				<label for="inputPhone" class="col-md-1 control-label">Telefono</label>
-				<div class="col-lg-8">
+				<div class="col-md-2">
 					<input type="text" class="form-control" id="inputPhone" placeholder="Telefono" ng-model="customer.phone">
 				</div>
-			</div>
-			<div class="form-group">
-			  <button class="btn btn-success pull-right" type="button" ng-click="addCustomer(customer.name, customer.phone)">aggiungi</button>
+				<button class="btn btn-success" type="button" ng-click="addCustomer(customer.name, customer.phone)">aggiungi</button>
 			</div>
 		</fieldset>
 	</form>
+	<hr>
+	<!-- <p class="bg&#45;info">Una volta inserito il nuovo cliente è possibile popolare la sua libreria direttamente dalla corrispettiva scheda</p> -->
+	<p class="text-info">Una volta inserito il nuovo cliente è possibile popolare la sua libreria direttamente dalla corrispettiva scheda</p>
 </div>

@@ -2,11 +2,11 @@ var http = require('http'),
 	db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024);
 // create tables
 db.transaction(function(tx) {
-	// developement
+	// development
 	// tx.executeSql('DROP TABLE STORE');
 	// tx.executeSql('DROP TABLE CUSTOMERS');
 	// tx.executeSql('DROP TABLE BOOKS');
-	// developement
+	// development
 	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
 		'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
@@ -18,7 +18,7 @@ db.transaction(function(tx) {
 usatoApp.controller('MainController', function($scope, utility, usatoAppFactory, usatoAppCustomerFactory, $location) {
 	// load header template
 	$scope.headerSrc = './tmpl/header.html';
-	//load books into scope variable
+	// load books into scope variable
 	$scope.$on('refreshStore', function(event) {
 		usatoAppFactory.get().then(function(s) {
 			$scope.store = s;
@@ -103,7 +103,7 @@ usatoApp.controller('customersController', function($scope) {
 	};
 	// check if that user have sold all his books
 	$scope.allSold = function(idc) {
-		var sold = 0, tots = 0;
+		var tots = 0;
 		for (var j = 0, len = $scope.books.length; j < len; j++) {
 			if($scope.books[j].IdCustomer == idc) {
 				tots++;
@@ -152,6 +152,8 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 			TOT.total += parseFloat(rbooks[i].Prezzo.replace(/,/, '.'));
 			TOT.dtotal += parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(rbooks[i].Discount) * 0.01));
 		}
+		TOT.total = Math.round(TOT.total * 100) / 100;
+		TOT.dtotal = Math.round(TOT.dtotal * 100) / 100;
 		return TOT;
 	};
 	// get total cost of sold books
@@ -162,6 +164,8 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 			TOT.total += parseFloat(sbooks[i].Prezzo.replace(/,/, '.'));
 			TOT.dtotal += parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(sbooks[i].Discount) * 0.01));
 		}
+		TOT.total = Math.round(TOT.total * 100) / 100;
+		TOT.dtotal = Math.round(TOT.dtotal * 100) / 100;
 		return TOT;
 	};
 	// get discount for a given book
@@ -171,12 +175,13 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 });
 
 usatoApp.controller('addBookController', function($scope, $routeParams) {
+	$('#success-alert').hide();
 	$scope.$emit('refreshStore');
 	// watch for change on isbn field in addbook form
 	$scope.$watch('newBook.Isbn', function(isbnValue) {
 		for(var i = 0; i < $scope.store.length; i++) {
 			if($scope.store[i].Isbn == isbnValue) {
-				// copy object into newBook obj except Isbn, or it will cause a loop and input box would became unchangable
+				// copy object into newBook obj except Isbn, or it will cause a loop and input box would became unchangeable
 				$scope.newBook.Titolo = $scope.store[i].Titolo;
 				$scope.newBook.Autore = $scope.store[i].Autore;
 				$scope.newBook.Prezzo = $scope.store[i].Prezzo;
@@ -194,14 +199,19 @@ usatoApp.controller('addBookController', function($scope, $routeParams) {
 			// control presence in store and insert based upon the results of the query
 			tx.executeSql('SELECT id FROM STORE WHERE Isbn = ?', [newBook.Isbn], function(tx, results) {
 				if(!results.rows.length)
-				tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) values (?, ?, ?, ?, ?, ?, ?)',
-					[newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo]);
+					tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) values (?, ?, ?, ?, ?, ?, ?)',
+						[newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo]);
 			});
+		});
+		// call alert for success operation
+		$('#success-alert').alert();
+		$('#success-alert').fadeTo(2000, 500).fadeOut(1000, function() {
+			$('#success-alert').alert('close');
 		});
 	};
 });
 
-usatoApp.controller('addCustomerController', function($scope) {
+usatoApp.controller('addCustomerController', function($scope, $location) {
 	// add new costumer from post data
 	$scope.addCustomer = function(name, phone) {
 		db.transaction(function(tx) {
@@ -209,6 +219,7 @@ usatoApp.controller('addCustomerController', function($scope) {
 		});
 		// refresh customers scope variable
 		$scope.$emit('refresh');
+		$location.path('/customers');
 	};
 });
 // controller for archive page, download and managing of books archive

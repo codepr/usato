@@ -2,9 +2,10 @@
 body {
 	font-family: Delius;
     padding-top: 30px;
-	background: url('../img/pile.png') no-repeat;
+	background: #e5e5e5 url('../img/pile.png') no-repeat;
 	background-size:12%;
 	background-position:bottom right;
+	background-attachment: fixed;
 	/* background-position: center center; */
 	/* background: radial-gradient(ellipse at center, #ffffff 0%, #c5c5f5 100%); */
 	/* color: #c8c8c8; */
@@ -61,4 +62,4 @@ i.fa.fa-times {
     background: rgba(0,0,0,0.3); -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 ::-webkit-scrollbar-thumb:window-inactive {background: rgba(0,0,0,0.4);}
-
+.bg-info {padding:15px; border-radius:6px; background-color: rgb(91, 192, 222); color:#ffffff;}

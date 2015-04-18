@@ -12,41 +12,43 @@
 		<p>Libri in contovendita: {{reservedBooks.length}}</p>
 		<p>Libri venduti: {{soldBooksByMe.length || 0}}</p>
 		<hr>
-		<h3>Libri in contovendita</h3>
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Materia</th>
-					<th>Titolo</th>
-					<th>Vol</th>
-					<th>Autore</th>
-					<th>Editore</th>
-					<th>ISBN</th>
-					<th nowrap>Prezzo €</th>
-					<th nowrap>Sconto %</th>
-					<th nowrap>Scontato €</th>
-					<th>Rimuovi</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr data-ng-repeat="book in filteredBooks = (reservedBooks | filter:search)">
-					<td>{{book.Materia}}</td>
-					<td>{{book.Titolo}}</td>
-					<td>{{book.Volume}}</td>
-					<td>{{book.Autore}}</td>
-					<td>{{book.Casa}}</td>
-					<td>{{book.Isbn}}</td>
-					<td>{{book.Prezzo}}</td>
-					<td>{{book.Discount}}</td>
-					<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
-					<td><i class="fa fa-times fa-2x" ng-click="deleteCopy(book.id)"></i></td>
-				</tr>
-			</tbody>
-		</table>
-		<h4 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro in contovendita</h4>
-		<hr>
-		<p> Totale: {{getTotal().total}} €</p><p>Scontato: {{getTotal().dtotal}} €</p>
-		<hr>
+		<div ng-show="reservedBooks.length > 0">
+			<h3>Libri in contovendita</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Materia</th>
+						<th>Titolo</th>
+						<th>Vol</th>
+						<th>Autore</th>
+						<th>Editore</th>
+						<th>ISBN</th>
+						<th nowrap>Prezzo €</th>
+						<th nowrap>Sconto %</th>
+						<th nowrap>Scontato €</th>
+						<th>Rimuovi</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="book in filteredBooks = (reservedBooks | filter:search)">
+						<td>{{book.Materia}}</td>
+						<td>{{book.Titolo}}</td>
+						<td>{{book.Volume}}</td>
+						<td>{{book.Autore}}</td>
+						<td>{{book.Casa}}</td>
+						<td>{{book.Isbn}}</td>
+						<td>{{book.Prezzo}}</td>
+						<td>{{book.Discount}}</td>
+						<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
+						<td><i class="fa fa-times fa-2x" ng-click="deleteCopy(book.id)"></i></td>
+					</tr>
+				</tbody>
+			</table>
+			<h4 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro in contovendita</h4>
+			<hr>
+			<p> Totale: {{getTotal().total}} €</p><p>Scontato: {{getTotal().dtotal}} €</p>
+			<hr>
+		</div>
 		<div ng-show="soldBooksByMe.length > 0">
 			<h3>Libri venduti</h3>
 			<table class="table">
@@ -81,7 +83,7 @@
 			</table>
 			<h4 data-ng-hide="soldBooks.length" style="text-align:center;">Nessuna corrispondenza / Nessun libro venduto</h4>
 			<hr>
-			<p ng-show="soldBooksByMe.length > 0">Totale: {{getTotalSold().total}} €</p><p>Scontato: {{getTotalSold().dtotal}}</p>
+			<p ng-show="soldBooksByMe.length > 0">Totale: {{getTotalSold().total}} €</p><p>Scontato: {{getTotalSold().dtotal}} €</p>
 		</div>
 	</div>
 </div>
