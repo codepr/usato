@@ -21,6 +21,9 @@ usatoApp.config(function($routeProvider) {
 		}).when('/archive', {
 			templateUrl: 'tmpl/archive.html',
 			controller: 'archiveController'
+		}).when('/addtoarchive', {
+			templateUrl: 'tmpl/addtoarchive.html',
+			controller: 'archiveController'
 		}).otherwise({
 			redirectTo: '/'
 		});

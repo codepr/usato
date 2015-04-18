@@ -1,0 +1,53 @@
+<a ng-click="back()" class="btn btn-info pull-right" href="javascript:">Indietro</a>
+<div class="table-container">
+	<h2>Archivio generale</h2>
+	<hr>
+	<form class="form-horizontal" role="form">
+		<fieldset>
+			<legend>Nuovo libro</legend>
+			<div class="form-group">
+				<label for="inputTitle" class="col-md-1 control-label">Titolo</label>
+				<div class="col-lg-7">
+					<input type="text" class="form-control" id="inputTitle" placeholder="Titolo" ng-model="newBook.Titolo" value="{{newBook.Titolo}}">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="inputIsbn" class="col-md-1 control-label">ISBN</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="inputIsbn" placeholder="ISBN" ng-model="newBook.Isbn">
+				</div>
+				<label class="col-md-1 control-label" for="inputDisc">Sconto</label>
+				<div class="col-md-3">
+					<input class="form-control" type="text" id="inputDisc" placeholder="Sconto da applicare" ng-model="newBook.Discount" value="{{newBook.Discount}}">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="inputSubj" class="col-md-1 control-label">Materia</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="inputSubj" placeholder="Materia" ng-model="newBook.Materia" value="{{newBook.Materia}}">
+				</div>
+				<label for="inputAuth" class="col-md-1 control-label">Autore</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="inputAuth" placeholder="Autore" ng-model="newBook.Autore" value="{{newBook.Autore}}">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="inputEdit" class="col-md-1 control-label">Editore</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="inputEdit" placeholder="Editore" ng-model="newBook.Casa" value="{{newBook.Casa}}">
+				</div>
+				<label for="inputPrice" class="col-md-1 control-label">Prezzo</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="inputPrice" placeholder="Prezzo" ng-model="newBook.Prezzo" value="{{newBook.Prezzo}}">
+				</div>
+			</div>
+			<div class="form-group">
+				<button id="confirmation" class="btn btn-success" ng-click="addToArchive()">aggiungi</button>
+			</div>
+		</fieldset>
+	</form>
+	<div class="alert alert-success" id="success-alert-arc">
+		<button type="button" class="close" data-dismiss="alert">&times</button>
+		<strong>Successo!</strong>  L'operazione d'inserimento è andata a buon fine!
+	</div>
+</div>

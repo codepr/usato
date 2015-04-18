@@ -1,14 +1,10 @@
 @import url("http://fonts.googleapis.com/css?family=Delius");
 body {
-	font-family: Delius;
-    padding-top: 30px;
+	font-family: Delius; padding-top: 30px;
 	background: #e5e5e5 url('../img/pile.png') no-repeat;
-	background-size:12%;
-	background-position:bottom right;
+	background-size:12%; background-position:bottom right;
 	background-attachment: fixed;
-	/* background-position: center center; */
 	/* background: radial-gradient(ellipse at center, #ffffff 0%, #c5c5f5 100%); */
-	/* color: #c8c8c8; */
 }
 #container { padding: 35px 0px; }
 .table-container { min-height: 560px }
@@ -22,7 +18,7 @@ body {
     font-weight: 500; color: black;
 }
 .bookThumb { height: 149px; padding-right: 21px; }
-.navbar-inverse { box-shadow: 0px 6px 8px 2px #777; }
+.navbar-inverse { box-shadow: 0px 6px 8px 3px #777; }
 table { font-size: .8em; }
 p { line-height:8px; }
 i { color:#ffffff; }

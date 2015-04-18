@@ -229,6 +229,18 @@ usatoApp.controller('addCustomerController', function($scope, $location) {
 });
 // controller for archive page, download and managing of books archive
 usatoApp.controller('archiveController', function($scope, utility) {
+	$('#success-alert-arc').hide();
+	// add book to archive
+	$scope.addToArchive = function() {
+		// db.transaction(function(tx) {
+		// 	tx.executeSql('INSERT OR IGNORE INTO STORE ');
+		// });
+		// call alert for success operation
+		$('#success-alert-arc').alert();
+		$('#success-alert-arc').fadeTo(2000, 500).fadeOut(1000, function() {
+			$('#success-alert-arc').alert('close');
+		});
+	};
 	// get links for books
 	var cheerio = require('cheerio');
 	var url = [];
@@ -293,7 +305,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
 						$scope.$emit('refreshStore');
 					});
 				}
-				else alert("error");
+				else alert("Errore nel parsing dei link");
 			})
 		}
 	};
