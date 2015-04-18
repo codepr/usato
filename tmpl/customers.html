@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	<tr data-ng-repeat="customer in filteredCustomers = (customers | filter:searchCustomer)" ng-class="{sold:!allSold(customer.id)}">
+		<tr data-ng-repeat="customer in filteredCustomers = (customers | filter:searchCustomer)" ng-class="{sold:!allSold(customer.id)}">
 			<td>{{customer.id}}</td>
 			<td><a href="#/showcustomer/{{customer.id}}">{{customer.Nome}}</a></td>
 			<td>{{customer.Telefono}}</td>

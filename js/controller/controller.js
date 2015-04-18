@@ -56,6 +56,10 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
 	$scope.back = function() {
 		window.history.back();
 	};
+	// simple javascript::print()
+	$scope.print = function() {
+		window.print();
+	};
 	// return customer by id
 	$scope.getCustomerById = function(id) {
 		var customers = $scope.customers;

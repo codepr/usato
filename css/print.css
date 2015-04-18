@@ -1,0 +1,6 @@
+* {font-size:.970em;}
+p {font-size: .85em;}
+h2 {font-size: 1.115em;}
+h3 {font-size: 1em;}
+.btn-group.pull-right {display:none;}
+td:last-child, th:last-child {display:none;}
