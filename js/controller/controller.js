@@ -231,11 +231,12 @@ usatoApp.controller('addCustomerController', function($scope, $location) {
 usatoApp.controller('archiveController', function($scope, utility) {
 	$('#success-alert-arc').hide();
 	// add book to archive
-	$scope.addToArchive = function() {
-		// db.transaction(function(tx) {
-		// 	tx.executeSql('INSERT OR IGNORE INTO STORE ');
-		// });
-		// call alert for success operation
+	$scope.addToArchive = function(book) {
+		db.transaction(function(tx) {
+			tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) values (?, ?, ?, ?, ?, ?, ?)',
+				[book.Materia, book.Isbn, book.Autore, book.Titolo, book.Volume, book.Casa, book.Prezzo]);
+		});
+		call alert for success operation
 		$('#success-alert-arc').alert();
 		$('#success-alert-arc').fadeTo(2000, 500).fadeOut(1000, function() {
 			$('#success-alert-arc').alert('close');
