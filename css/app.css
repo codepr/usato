@@ -1,6 +1,6 @@
-@import url("http://fonts.googleapis.com/css?family=Delius");
+/*@import url("http://fonts.googleapis.com/css?family=Delius");*/
 body {
-	font-family: Delius; padding-top: 30px;
+	font-family: Dejavu sans mono; padding-top: 30px;
 	background: #e5e5e5 url('../img/pile.png') no-repeat;
 	background-size:12%; background-position:bottom right;
 	background-attachment: fixed;

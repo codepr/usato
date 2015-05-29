@@ -1,4 +1,3 @@
-var db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024);
 usatoApp.factory('utility', function() {
 	// Download html of a URL specified page
 	return {
@@ -56,8 +55,7 @@ usatoApp.factory('usatoAppFactory', function($resource, $q) {
 			var deferred = $q.defer();
 			db.transaction(function(tx) {
 				tx.executeSql('SELECT COUNT(Id) AS c FROM BOOKS WHERE Isbn = ?', [isbn], function(tx, results) {
-					if(results.rows.length > 0)	deferred.resolve(results.rows.item(0).c);
-					else deferred.reject(results.rows.item(0).c);
+					deferred.resolve(results.rows.item(0).c);
 				});
 			});
 			return deferred.promise;
