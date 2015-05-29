@@ -6,12 +6,12 @@ db.transaction(function(tx) {
 	// tx.executeSql('DROP TABLE CUSTOMERS');
 	// tx.executeSql('DROP TABLE BOOKS');
 	// development
-	// tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	// 	'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
-	// tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	// 	'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
-	// tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	// 	'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
 });
 // main controller
 usatoApp.controller('MainController', function($scope, utility, usatoAppFactory, usatoAppCustomerFactory, $location) {
