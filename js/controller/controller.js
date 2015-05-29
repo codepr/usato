@@ -338,7 +338,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
     // backup function
     function writeBackup(text) {
         fs.appendFile('.backup_store', text, function(err) {
-            if(err) throw err;
+            if(err) alert(err);
         });
     }
 	// development function ****** REMOVE ******
