@@ -25,6 +25,21 @@ usatoApp.factory('utility', function() {
             };
             bdb[collection].update(q, q, options);
         },
+        restore: function() {
+            db.transaction(function(tx) {
+	            // development
+	            tx.executeSql('DROP TABLE STORE');
+	            tx.executeSql('DROP TABLE CUSTOMERS');
+	            tx.executeSql('DROP TABLE BOOKS');
+	            // development
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	                      'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	                      'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	                      'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+            });
+        },
         wipe: function() {
             db.transaction(function(tx) {
 	            // development
@@ -38,6 +53,12 @@ usatoApp.factory('utility', function() {
 	 	                      'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
 	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
 	 	                      'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+                fs.unlinkSync('./store_backup/store.json');
+                fs.unlinkSync('./store_backup/books.json');
+                fs.unlinkSync('./store_backup/customers.json');
+                fs.writeFileSync('./store_backup/store.json', "[]");
+                fs.writeFileSync('./store_backup/books.json', "[]");
+                fs.writeFileSync('./store_backup/customers.json', "[]");
             });
 	    }
     };

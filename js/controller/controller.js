@@ -337,9 +337,12 @@ usatoApp.controller('archiveController', function($scope, utility) {
 });
 
 usatoApp.controller('settingsController', function($scope, utility, usatoAppSettingsFactory) {
-    usatoAppSettingsFactory.getStats().then(function(b) {
-		$scope.stats = b;
-	});
+    $scope.$on('refreshStats', function(event) {
+        usatoAppSettingsFactory.getStats().then(function(s) {
+		    $scope.stats = s;
+	    });
+    });
+    $scope.$emit('refreshStats');
     // development function ****** REMOVE ******
 	$scope.getLinks = function() {
 		var cheerio = require('cheerio');
@@ -356,5 +359,17 @@ usatoApp.controller('settingsController', function($scope, utility, usatoAppSett
 			}
 		});
 	};
+    // total wipe rest
+    $scope.wipe = function() {
+        var c = confirm("Reset completo dell'applicazione:\nOgni dato sarà cancellato definitivamente.\nProcedere?");
+        if(c == true) {
+            utility.wipe();
+            $scope.$emit('refresh');
+            $scope.$emit('refreshStats');
+            $scope.$emit('refreshBooks');
+            $scope.$emit('refreshStore');
+            $scope.$emit('refreshSold');
+        }
+    };
 });
     
