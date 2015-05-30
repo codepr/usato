@@ -35,3 +35,4 @@ i.fa.fa-times { color:#f00; cursor:pointer; }
 }
 ::-webkit-scrollbar-thumb:window-inactive {background: rgba(0,0,0,0.4);}
 .bg-info {padding:15px; border-radius:6px; background-color: rgb(91, 192, 222); color:#ffffff;}
+.btn.btn-info,.btn.btn-warning,.btn.btn-danger,.btn.btn-success{ background: #000000; border-color: #000000; }
