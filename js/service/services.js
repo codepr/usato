@@ -38,6 +38,15 @@ usatoApp.factory('utility', function() {
 	 	                      'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
 	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
 	 	                      'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+                // restore from files
+                var files = ['store.json', 'customers.json', 'books.json'];
+                for(var i = 0; i < files.length; i++) {
+                    var data = fs.readFileSync('./store_backup/'+files[i]);
+                    for(var j = 0; j < data.length; j++) {
+                        alert(JSON.stringify(data['query']));
+                    }
+                    tx.executeSql(data['query']);
+                }
             });
         },
         wipe: function() {

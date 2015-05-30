@@ -100,8 +100,8 @@ usatoApp.controller('customersController', function($scope, utility) {
             // reload customers
 		    $scope.$emit('refresh');
 		});
-        utility.writeBackup('customers', 'DELETE FROM CUSTOMERS WHERE id = '+identifier+'');
-        utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+identifier+'');
+//        utility.writeBackup('customers', 'DELETE FROM CUSTOMERS WHERE id = '+identifier+'');
+//        utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+identifier+'');
 	};
 	// check if that user have sold all his books
 	$scope.allSold = function(idc) {
@@ -135,7 +135,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 	$scope.deleteCopy = function(idc) {
 		db.transaction(function(tx) {
 			tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
-            utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+$routeParams.id+' AND Id = '+idc+'');
+//            utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+$routeParams.id+' AND Id = '+idc+'');
             $scope.$emit('refreshReserved');
 		});
 	};
@@ -370,6 +370,18 @@ usatoApp.controller('settingsController', function($scope, utility, usatoAppSett
             $scope.$emit('refreshStore');
             $scope.$emit('refreshSold');
         }
+    };
+    // restore from files
+    $scope.fullRestore = function() {
+        // var c = confirm("Ripristino dei dati dell'applicazione:\nOgni dato sarà sovrascritto.\nProcedere?");
+        // if(c == true) {
+        //     utility.restore();
+        //     $scope.$emit('refresh');
+        //     $scope.$emit('refreshStats');
+        //     $scope.$emit('refreshBooks');
+        //     $scope.$emit('refreshStore');
+        //     $scope.$emit('refreshSold');
+        // }
     };
 });
     
