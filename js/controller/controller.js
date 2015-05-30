@@ -135,7 +135,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 	$scope.deleteCopy = function(idc) {
 		db.transaction(function(tx) {
 			tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
-            utility.writeBackup('books', 'DELETE FROM BOOKS WHEE IdCustomer = '+$routeParams.id+' AND Id = '+idc+'');
+            utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+$routeParams.id+' AND Id = '+idc+'');
             $scope.$emit('refreshReserved');
 		});
 	};
@@ -193,7 +193,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 	};
 });
 // book addition management, form validations
-usatoApp.controller('addBookController', function($scope, $routeParams) {
+usatoApp.controller('addBookController', function($scope, $routeParams, utility) {
     $('#success-alert').alert();
 	$('#success-alert').hide();
 	$scope.$emit('refreshStore');
@@ -334,27 +334,27 @@ usatoApp.controller('archiveController', function($scope, utility) {
 			});
 		}
 	};
-	// development function ****** REMOVE ******
-// 	$scope.getLinks = function() {
-// 		var cheerio = require('cheerio');
-// 		utility.download('http://www.giuseppeveronese.it/segreteria/libri_testo.aspx', function(data) {
-// 			if(data) {
-// 				var $ = cheerio.load(data);
-// 				var links = $('table a');
-// 				var col = [];
-// 				$(links).each(function(i, link) {
-// 					if(/..\/public\/GV_290514/.test($(link).attr('href')))
-// 					col.push($(link).attr('href'));
-// 				});
-// 				alert(JSON.stringify(col[0]));
-// 			}
-// 		});
-// 	};
 });
 
 usatoApp.controller('settingsController', function($scope, utility, usatoAppSettingsFactory) {
     usatoAppSettingsFactory.getStats().then(function(b) {
 		$scope.stats = b;
-	});                    
+	});
+    // development function ****** REMOVE ******
+	$scope.getLinks = function() {
+		var cheerio = require('cheerio');
+		utility.download('http://www.giuseppeveronese.it/segreteria/libri_testo.aspx', function(data) {
+			if(data) {
+				var $ = cheerio.load(data);
+				var links = $('table a');
+				var col = [];
+				$(links).each(function(i, link) {
+					if(/..\/public\/GV_290514/.test($(link).attr('href')))
+					col.push($(link).attr('href'));
+				});
+				alert(JSON.stringify(col[0]));
+			}
+		});
+	};
 });
     

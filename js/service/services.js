@@ -16,14 +16,14 @@ usatoApp.factory('utility', function() {
 		},
         writeBackup: function (collection, text) {
             bdb.connect('store_backup', [collection]);
-            var query = {
+            var q = {
                 query : text
             };
             var options = {
                 multi: false,
                 upsert: true
             };
-            bdb.store.update(query, query, options);
+            bdb[collection].update(q, q, options);
         },
         wipe: function() {
             db.transaction(function(tx) {
