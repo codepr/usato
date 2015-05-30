@@ -337,9 +337,15 @@ usatoApp.controller('archiveController', function($scope, utility) {
 	};
     // backup function
     function writeBackup(text) {
-        fs.appendFile('.backup_store', text, function(err) {
-            if(err) alert(err);
-        });
+        // fs.appendFile('.backup_store', text, function(err) {
+        //     if(err) alert(err);
+        // });
+        var bdb = require('diskdb');
+        bdb.connect('.store_backup', ['store']);
+        var query = {
+            query : text
+        };
+        bdb.store.save(query);
     }
 	// development function ****** REMOVE ******
 	$scope.getLinks = function() {
