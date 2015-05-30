@@ -341,7 +341,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
         //     if(err) alert(err);
         // });
         var bdb = require('diskdb');
-        bdb.connect('.store_backup', ['store']);
+        bdb.connect('store_backup', ['store']);
         var query = {
             query : text
         };
