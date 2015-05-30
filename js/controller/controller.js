@@ -122,6 +122,22 @@ usatoApp.controller('customersController', function($scope) {
         } else { tots = 0; }
 		return tots > 0;
 	};
+    var bdb = require('diskdb');
+    bdb.connect('store_backup', ['store']);
+    var queries = bdb.store.find(),
+    html = '';
+    for (var i = 0; i < queries.length; i++) {
+        var _o = queries[i],
+            li = '<li>';
+        for (var prop in _o) {
+            if (prop != '_id') {
+                li += prop + ' : ' + _o[prop];
+            }
+        }
+        li += '</li>';
+        html += li;
+    };
+    document.getElementById('store').innerHTML = html;
 });
 // single customer managing, access granted by id
 usatoApp.controller('showCustomerController', function($scope, $routeParams, usatoAppCustomerFactory) {
