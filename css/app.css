@@ -40,3 +40,4 @@ i.fa.fa-times { color:#000; cursor:pointer; }
 .btn.btn-warning:hover,
 .btn.btn-danger:hover,
 .btn.btn-success:hover { background: rgba(0,0,0,.7); border-color: rgba(0,0,0,.7); }
+.stretch {width:30%;}

@@ -13,8 +13,34 @@ usatoApp.factory('utility', function() {
 			}).on('error', function() {
 				callback(null);
 			});
-		}
-	};
+		},
+        writeBackup: function (collection, text) {
+            bdb.connect('store_backup', [collection]);
+            var query = {
+                query : text
+            };
+            var options = {
+                multi: false,
+                upsert: true
+            };
+            bdb.store.update(query, query, options);
+        },
+        wipe: function() {
+            db.transaction(function(tx) {
+	            // development
+	            tx.executeSql('DROP TABLE STORE');
+	            tx.executeSql('DROP TABLE CUSTOMERS');
+	            tx.executeSql('DROP TABLE BOOKS');
+	            // development
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	                      'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	                      'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
+	 	                      'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+            });
+	    }
+    };
 });
 // main controller factory service
 usatoApp.factory('usatoAppFactory', function($resource, $q) {
@@ -139,4 +165,19 @@ usatoApp.factory('usatoAppCustomerFactory', function($resource, $q) {
 			return Math.round((parseFloat(bk.replace(/,/, '.')) - (parseFloat(bk.replace(/,/, '.')) * (parseFloat(ds) * 0.01))) * 100) / 100;
 		}
 	};
+});
+usatoApp.factory('usatoAppSettingsFactory', function($resource, $q) {
+    return {
+        getStats: function() {
+            var deferred = $q.defer();
+            var files = ['store.json', 'customers.json', 'books.json'];
+            var arr = [];
+            for(var i = 0; i < files.length; i++) {
+                sts = fs.statSync('./store_backup/'+files[i]);
+                arr.push({file:files[i], size:pb(sts['size'])});
+            }
+            deferred.resolve(arr);
+            return deferred.promise;
+        }
+    };
 });

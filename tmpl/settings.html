@@ -1,0 +1,19 @@
+<div class="table-container">
+  <h2>Impostazioni</h2>
+  <hr>
+  <h5>Backup files</h5>
+  <table class="table stretch">
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="stat in stats">
+        <td>{{stat.file}}</td>
+        <td>{{stat.size}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

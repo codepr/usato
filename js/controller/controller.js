@@ -1,18 +1,8 @@
-var http = require('http'), db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024), fs = require('fs');
-// create tables
-db.transaction(function(tx) {
-	// development
-	// tx.executeSql('DROP TABLE STORE');
-	// tx.executeSql('DROP TABLE CUSTOMERS');
-	// tx.executeSql('DROP TABLE BOOKS');
-	// development
-	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
-	tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
-});
+var http = require('http'),
+    db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024),
+    bdb = require('diskdb'),
+    fs = require('fs'),
+    pb = require('pretty-bytes');
 // main controller
 usatoApp.controller('MainController', function($scope, utility, usatoAppFactory, usatoAppCustomerFactory, $location) {
 	// load header template
@@ -33,10 +23,8 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
 		});                    
 	});
 	$scope.$emit('refreshBooks');
-	// set limit to 10 results for home page
-	$scope.quantity = 10;
 	// listen for event 'refresh' and refresh customers list
-	$scope.$on('refresh', function(event) {
+    $scope.$on('refresh', function(event) {
         $scope.customers = null;
 		 usatoAppCustomerFactory.get().then(function(c) {
 			$scope.customers = c;
@@ -76,12 +64,14 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
 	// return the customer from id
 	$scope.getOwner = function(id) {
         if(typeof $scope.customers !== 'undefined') {
-		    for (var i = 0, len = $scope.customers.length; i < len; i++) {
+		    for(var i = 0, len = $scope.customers.length; i < len; i++) {
 			    if($scope.customers[i].id == id) {
 				    return $scope.customers[i].Nome;
 			    }
 		    }
-        } else { return 'Unknown'; }
+        } else { 
+            return 'Unknown'; 
+        }
 	};
 	// get discount for a given book
 	$scope.getDiscount = function(bk, ds) {
@@ -96,10 +86,11 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
             // reload sold
 		    $scope.$emit('refreshSold');
 		});
+        utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 1 WHERE id = '+bid+'');
 	};
 });
 // customers managing and CRUD
-usatoApp.controller('customersController', function($scope) {
+usatoApp.controller('customersController', function($scope, utility) {
 	$scope.$emit('refreshBooks');
 	// remove customer and save it persistencly
 	$scope.deleteCustomer = function(identifier) {
@@ -109,6 +100,8 @@ usatoApp.controller('customersController', function($scope) {
             // reload customers
 		    $scope.$emit('refresh');
 		});
+        utility.writeBackup('customers', 'DELETE FROM CUSTOMERS WHERE id = '+identifier+'');
+        utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+identifier+'');
 	};
 	// check if that user have sold all his books
 	$scope.allSold = function(idc) {
@@ -122,25 +115,9 @@ usatoApp.controller('customersController', function($scope) {
         } else { tots = 0; }
 		return tots > 0;
 	};
-    var bdb = require('diskdb');
-    bdb.connect('store_backup', ['store']);
-    var queries = bdb.store.find(),
-    html = '';
-    for (var i = 0; i < queries.length; i++) {
-        var _o = queries[i],
-            li = '<li>';
-        for (var prop in _o) {
-            if (prop != '_id') {
-                li += prop + ' : ' + _o[prop];
-            }
-        }
-        li += '</li>';
-        html += li;
-    };
-    document.getElementById('store').innerHTML = html;
 });
 // single customer managing, access granted by id
-usatoApp.controller('showCustomerController', function($scope, $routeParams, usatoAppCustomerFactory) {
+usatoApp.controller('showCustomerController', function($scope, $routeParams, usatoAppCustomerFactory, utility) {
 	$scope.getCustomerById($routeParams.id);
     // reload books for a user
     $scope.$on('refreshReserved', function(event) {
@@ -151,7 +128,6 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
     });
     $scope.$emit('refreshReserved');
 	// get sold book list for a given user
-    $scope
 	usatoAppCustomerFactory.soldBooksById($routeParams.id).then(function(sb) {
 		$scope.soldBooksByMe = sb;
 	});
@@ -159,6 +135,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 	$scope.deleteCopy = function(idc) {
 		db.transaction(function(tx) {
 			tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
+            utility.writeBackup('books', 'DELETE FROM BOOKS WHEE IdCustomer = '+$routeParams.id+' AND Id = '+idc+'');
             $scope.$emit('refreshReserved');
 		});
 	};
@@ -166,6 +143,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 	$scope.restore = function(bid) {
 		db.transaction(function(tx) {
 			tx.executeSql('UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = ? AND id = ?', [$routeParams.id, bid]);
+            utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = '+$routeParams.id+' AND id = '+bid+'');
             // refresh general sold list
 		    $scope.$emit('refreshSold');
 		    // refresh sold list
@@ -241,9 +219,11 @@ usatoApp.controller('addBookController', function($scope, $routeParams) {
 			tx.executeSql('INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES (?, ?, ?, ?)', [newBook.Isbn, id, newBook.Discount, 0]);
 			// control presence in store and insert based upon the results of the query
 			tx.executeSql('SELECT id FROM STORE WHERE Isbn = ?', [newBook.Isbn], function(tx, results) {
-				if(!results.rows.length)
-					tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) values (?, ?, ?, ?, ?, ?, ?)',
+				if(!results.rows.length) {
+					tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 						[newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo]);
+                    utility.writeBackup('store','INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+newBook.Materia+','+newBook.Isbn+','+newBook.Autore+','+newBook.Titolo+','+newBook.Volume+','+newBook.Casa+ ','+newBook.Prezzo+')');
+                }
 			});
 		});
 		// call alert for success operation
@@ -251,10 +231,11 @@ usatoApp.controller('addBookController', function($scope, $routeParams) {
 		$('#success-alert').fadeTo(2000, 500).fadeOut(1000, function() {
 			$('#success-alert').hide();
 		});
+        utility.writeBackup('books', 'INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ('+newBook.Isbn+','+id+','+newBook.Discount+','+0+')');
 	};
 });
 // customer addition managing and form validations
-usatoApp.controller('addCustomerController', function($scope, $location) {
+usatoApp.controller('addCustomerController', function($scope, $location, utility) {
 	// add new costumer from post data
 	$scope.addCustomer = function(name, phone) {
 		db.transaction(function(tx) {
@@ -262,6 +243,7 @@ usatoApp.controller('addCustomerController', function($scope, $location) {
 		});
 		// refresh customers scope variable
 		$scope.$emit('refresh');
+        utility.writeBackup('customers', 'INSERT INTO CUSTOMERS (Nome, Telefono) VALUES ('+name+','+phone+')');
 		$location.path('/customers');
 	};
 });
@@ -275,7 +257,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
 			tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 				[book.Materia, book.Isbn, book.Autore, book.Titolo, book.Volume, book.Casa, book.Prezzo]);
             $scope.$emit('refreshStore');
-            writeBackup('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+book.Materia+','+book.Isbn+','+book.Autore+','+book.Titolo+','+book.Volume+','+book.Casa+','+book.Prezzo+')');
+            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+book.Materia+','+book.Isbn+','+book.Autore+','+book.Titolo+','+book.Volume+','+book.Casa+','+book.Prezzo+')');
 		});
 		// call alert for success operation
 		$('#success-alert-arc').fadeTo(2000, 500).fadeOut(1000, function() {
@@ -339,44 +321,40 @@ usatoApp.controller('archiveController', function($scope, utility) {
 					// write to storage persistence file
 					db.transaction(function(tx) {
 						for(var i = 0; i < tbObj.length; i++) {
+                            tbObj[i].Titolo = (tbObj[i].Titolo).replace(/\uFFFD/g, 'A\'');
 							tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES(?, ?, ?, ?, ?, ?, ?)',
 								[tbObj[i].Materia,tbObj[i].Isbn,tbObj[i].Autore,tbObj[i].Titolo,tbObj[i].Volume,tbObj[i]['Casa Editrice'],tbObj[i].Prezzo]);
-                            writeBackup('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES('+tbObj[i].Materia+','+tbObj[i].Isbn+','+tbObj[i].Autore+','+tbObj[i].Titolo+','+tbObj[i].Volume+','+tbObj[i]['Casa Editrice']+','+tbObj[i].Prezzo+')\n');
+                            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES('+tbObj[i].Materia+','+tbObj[i].Isbn+','+tbObj[i].Autore+','+tbObj[i].Titolo+','+tbObj[i].Volume+','+tbObj[i]['Casa Editrice']+','+tbObj[i].Prezzo+')\n');
 						}
 						// reload books into scope variable
 						$scope.$emit('refreshStore');
 					});
 				}
 				else alert("Errore nel parsing dei link");
-			})
+			});
 		}
 	};
-    // backup function
-    function writeBackup(text) {
-        // fs.appendFile('.backup_store', text, function(err) {
-        //     if(err) alert(err);
-        // });
-        var bdb = require('diskdb');
-        bdb.connect('store_backup', ['store']);
-        var query = {
-            query : text
-        };
-        bdb.store.save(query);
-    }
 	// development function ****** REMOVE ******
-	$scope.getLinks = function() {
-		var cheerio = require('cheerio');
-		utility.download('http://www.giuseppeveronese.it/segreteria/libri_testo.aspx', function(data) {
-			if(data) {
-				var $ = cheerio.load(data);
-				var links = $('table a');
-				var col = [];
-				$(links).each(function(i, link) {
-					if(/..\/public\/GV_290514/.test($(link).attr('href')))
-					col.push($(link).attr('href'));
-				});
-				alert(JSON.stringify(col[0]));
-			}
-		});
-	}
+// 	$scope.getLinks = function() {
+// 		var cheerio = require('cheerio');
+// 		utility.download('http://www.giuseppeveronese.it/segreteria/libri_testo.aspx', function(data) {
+// 			if(data) {
+// 				var $ = cheerio.load(data);
+// 				var links = $('table a');
+// 				var col = [];
+// 				$(links).each(function(i, link) {
+// 					if(/..\/public\/GV_290514/.test($(link).attr('href')))
+// 					col.push($(link).attr('href'));
+// 				});
+// 				alert(JSON.stringify(col[0]));
+// 			}
+// 		});
+// 	};
 });
+
+usatoApp.controller('settingsController', function($scope, utility, usatoAppSettingsFactory) {
+    usatoAppSettingsFactory.getStats().then(function(b) {
+		$scope.stats = b;
+	});                    
+});
+    

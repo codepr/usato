@@ -24,7 +24,10 @@ usatoApp.config(function($routeProvider) {
 		}).when('/addtoarchive', {
 			templateUrl: 'tmpl/addtoarchive.html',
 			controller: 'archiveController'
-		}).otherwise({
+		}).when('/settings', {
+            templateUrl: 'tmpl/settings.html',
+            controller: 'settingsController'
+        }).otherwise({
 			redirectTo: '/'
 		});
 });
