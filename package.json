@@ -1,6 +1,6 @@
 {
-  "name": "Usato - Alpha",
-  "version": "0.8.6",
+  "name": "Usato",
+  "version": "1.0.0",
   "description": "Applicazione desktop per gestione prodotti di libreria usati.",
   "main": "index.html",
   "scripts": {

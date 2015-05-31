@@ -79,14 +79,17 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
 	};
 	// sell selected book
 	$scope.sell = function(bid) {
-		db.transaction(function(tx) {
-			tx.executeSql('UPDATE BOOKS SET Sold = 1 WHERE id = ?', [bid]);
-            // reload books
-		    $scope.$emit('refreshBooks');
-            // reload sold
-		    $scope.$emit('refreshSold');
-		});
-        utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 1 WHERE id = '+bid+'');
+        var c = confirm("Libro selezionato per la vendita.\nProcedere?");
+        if(c == true) {
+		    db.transaction(function(tx) {
+			    tx.executeSql('UPDATE BOOKS SET Sold = 1 WHERE id = ?', [bid]);
+                // reload books
+		        $scope.$emit('refreshBooks');
+                // reload sold
+		        $scope.$emit('refreshSold');
+		    });
+            utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 1 WHERE id = '+bid+'');
+        }
 	};
 });
 // customers managing and CRUD
@@ -94,14 +97,15 @@ usatoApp.controller('customersController', function($scope, utility) {
 	$scope.$emit('refreshBooks');
 	// remove customer and save it persistencly
 	$scope.deleteCustomer = function(identifier) {
-		db.transaction(function(tx) {
-			tx.executeSql('DELETE FROM CUSTOMERS WHERE id = ?', [identifier]);
-			tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ?', [identifier]);
-            // reload customers
-		    $scope.$emit('refresh');
-		});
-//        utility.writeBackup('customers', 'DELETE FROM CUSTOMERS WHERE id = '+identifier+'');
-//        utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+identifier+'');
+        var c = confirm("Cancellare il cliente selezionato dal database? Tutti i libri allegati al cliente andranno cancellati.");
+        if(c == true) {
+		    db.transaction(function(tx) {
+			    tx.executeSql('DELETE FROM CUSTOMERS WHERE id = ?', [identifier]);
+			    tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ?', [identifier]);
+                // reload customers
+		        $scope.$emit('refresh');
+		    });
+        }
 	};
 	// check if that user have sold all his books
 	$scope.allSold = function(idc) {
@@ -133,25 +137,30 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 	});
 	// remove a copy of book for the current customer
 	$scope.deleteCopy = function(idc) {
-		db.transaction(function(tx) {
-			tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
-//            utility.writeBackup('books', 'DELETE FROM BOOKS WHERE IdCustomer = '+$routeParams.id+' AND Id = '+idc+'');
-            $scope.$emit('refreshReserved');
-		});
+        var c = confirm("Cancellare il libro selezionato dalla scheda cliente?");
+        if(c == true) {
+		    db.transaction(function(tx) {
+			    tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
+                $scope.$emit('refreshReserved');
+		    });
+        }
 	};
 	// restore a book from sell list to unsell
 	$scope.restore = function(bid) {
-		db.transaction(function(tx) {
-			tx.executeSql('UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = ? AND id = ?', [$routeParams.id, bid]);
-            utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = '+$routeParams.id+' AND id = '+bid+'');
-            // refresh general sold list
-		    $scope.$emit('refreshSold');
-		    // refresh sold list
-            $scope.soldBooksByMe = null;
-		    usatoAppCustomerFactory.soldBooksById($routeParams.id).then(function(sb) {
-			    $scope.soldBooksByMe = sb;
+        var c = confirm("Ripristinare la vendita reinserendola nella giacenza invenduta? (Voce menu 'Libri')");
+        if(c == true) {
+		    db.transaction(function(tx) {
+			    tx.executeSql('UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = ? AND id = ?', [$routeParams.id, bid]);
+                utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = '+$routeParams.id+' AND id = '+bid+'');
+                // refresh general sold list
+		        $scope.$emit('refreshSold');
+		        // refresh sold list
+                $scope.soldBooksByMe = null;
+		        usatoAppCustomerFactory.soldBooksById($routeParams.id).then(function(sb) {
+			        $scope.soldBooksByMe = sb;
+		        });
 		    });
-		});
+        }
 	};
 	// get total cost of reserved books
 	$scope.getTotal = function() {
@@ -160,7 +169,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
         if(typeof rbooks !== 'undefined') {
 		    for(var i = 0; i < rbooks.length; i++) {
 			    TOT.total += parseFloat(rbooks[i].Prezzo.replace(/,/, '.'));
-			    TOT.dtotal += parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(rbooks[i].Discount) * 0.01));
+			    TOT.dtotal += parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(rbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(75) * 0.01));
 		    }
 		    TOT.total = Math.round(TOT.total * 100) / 100;
 		    TOT.dtotal = Math.round(TOT.dtotal * 100) / 100;
@@ -177,7 +186,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
         if(typeof sbooks !== 'undefined') {
 		    for(var i = 0; i < sbooks.length; i++) {
 			    TOT.total += parseFloat(sbooks[i].Prezzo.replace(/,/, '.'));
-			    TOT.dtotal += parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(sbooks[i].Discount) * 0.01));
+			    TOT.dtotal += parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) - (parseFloat(sbooks[i].Prezzo.replace(/,/, '.')) * (parseFloat(75) * 0.01));
 		    }
 		    TOT.total = Math.round(TOT.total * 100) / 100;
 		    TOT.dtotal = Math.round(TOT.dtotal * 100) / 100;
@@ -255,9 +264,9 @@ usatoApp.controller('archiveController', function($scope, utility) {
 	$scope.addToArchive = function(book) {
 		db.transaction(function(tx) {
 			tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
-				[book.Materia, book.Isbn, book.Autore, book.Titolo, book.Volume, book.Casa, book.Prezzo]);
+				[book.Materia, book.Isbn, book.Autore, book.Titolo, book.Vol, book.Casa, book.Prezzo]);
             $scope.$emit('refreshStore');
-            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+book.Materia+','+book.Isbn+','+book.Autore+','+book.Titolo+','+book.Volume+','+book.Casa+','+book.Prezzo+')');
+            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+book.Materia+','+book.Isbn+','+book.Autore+','+book.Titolo+','+book.Vol+','+book.Casa+','+book.Prezzo+')');
 		});
 		// call alert for success operation
 		$('#success-alert-arc').fadeTo(2000, 500).fadeOut(1000, function() {
@@ -280,11 +289,14 @@ usatoApp.controller('archiveController', function($scope, utility) {
 	});
 	// delete all books from store table
 	$scope.resetTable = function() {
-		db.transaction(function(tx) {
-			tx.executeSql('DELETE FROM STORE');
-			// reload books into scope variable
-			$scope.$emit('refreshStore');
-		});
+        var c = confirm("L'archivio verrà cancellato:\nProcedere?");
+        if(c == true) {
+		    db.transaction(function(tx) {
+			    tx.executeSql('DELETE FROM STORE');
+			    // reload books into scope variable
+			    $scope.$emit('refreshStore');
+		    });
+        }
 	};
 	// process table inside specified url
 	$scope.getTable = function() {

@@ -8,7 +8,7 @@
 			<div class="form-group">
 				<label for="inputTitle" class="col-md-1 control-label">Titolo</label>
 				<div class="col-lg-7">
-					<input type="text" class="form-control" id="inputTitle" placeholder="Titolo" ng-model="newBook.Titolo" value="{{newBook.Titolo}}">
+					<input type="text" class="form-control" id="inputTitle" placeholder="Titolo" ng-model="newBook.Titolo">
 				</div>
 			</div>
 			<div class="form-group row">
@@ -16,25 +16,29 @@
 				<div class="col-md-3">
 					<input type="text" class="form-control" id="inputIsbn" placeholder="ISBN" ng-model="newBook.Isbn">
 				</div>
+                <label for="inputVol" class="col-md-1 control-label">Vol.</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="inputVol" placeholder="Volumi" ng-model="newBook.Vol">
+				</div>
 			</div>
 			<div class="form-group row">
 				<label for="inputSubj" class="col-md-1 control-label">Materia</label>
 				<div class="col-md-3">
-					<input type="text" class="form-control" id="inputSubj" placeholder="Materia" ng-model="newBook.Materia" value="{{newBook.Materia}}">
+					<input type="text" class="form-control" id="inputSubj" placeholder="Materia" ng-model="newBook.Materia">
 				</div>
 				<label for="inputAuth" class="col-md-1 control-label">Autore</label>
 				<div class="col-md-3">
-					<input type="text" class="form-control" id="inputAuth" placeholder="Autore" ng-model="newBook.Autore" value="{{newBook.Autore}}">
+					<input type="text" class="form-control" id="inputAuth" placeholder="Autore" ng-model="newBook.Autore">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="inputEdit" class="col-md-1 control-label">Editore</label>
 				<div class="col-md-3">
-					<input type="text" class="form-control" id="inputEdit" placeholder="Editore" ng-model="newBook.Casa" value="{{newBook.Casa}}">
+					<input type="text" class="form-control" id="inputEdit" placeholder="Editore" ng-model="newBook.Casa">
 				</div>
 				<label for="inputPrice" class="col-md-1 control-label">Prezzo</label>
 				<div class="col-md-3">
-					<input type="text" class="form-control" id="inputPrice" placeholder="Prezzo" ng-model="newBook.Prezzo" value="{{newBook.Prezzo}}">
+					<input type="text" class="form-control" id="inputPrice" placeholder="Prezzo" ng-model="newBook.Prezzo">
 				</div>
 			</div>
 			<div class="form-group">

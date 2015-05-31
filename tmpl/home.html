@@ -1,38 +1,40 @@
 <div class="table-container">
-	<h2>Libri</h2>
-	<input type="text" placeholder="Cerca libro | ISBN | copie | sconto" class="form-control" data-ng-model="search">
-	<hr>
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Materia</th>
-				<th>Titolo</th>
-				<th>Vol</th>
-				<th>Autore</th>
-				<th>Editore</th>
-				<th>ISBN</th>
-				<th>Proprietario</th>
-				<th nowrap>Prezzo €</th>
-				<th nowrap>Sconto %</th>
-				<th nowrap>Scontato €</th>
-				<th>Vendi</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr data-ng-repeat="book in filteredBooks = (books | filter:search)">
-				<td>{{book.Materia}}</td>
-				<td>{{book.Titolo}}</td>
-				<td><span ng-show="book.Volume !== undefined">{{book.Volume}}</span></td>
-				<td>{{book.Autore}}</td>
-				<td>{{book.Casa}}</td>
-				<td>{{book.Isbn}}</td>
-				<td><a href="#/showcustomer/{{book.IdCustomer}}">{{getOwner(book.IdCustomer)}}</a></td>
-				<td>{{book.Prezzo}}</td>
-				<td>{{book.Discount}}</td>
-				<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
-				<td><i class="fa fa-repeat fa-2x" ng-click="sell(book.id)"></i></td>
-			</tr>
-		</tbody>
-	</table>
-	<h3 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h3>
+  <h2>Libri</h2>
+  <input type="text" placeholder="Cerca libro | ISBN | copie | sconto" class="form-control" data-ng-model="search">
+  <hr>
+  <table class="table">
+	<thead>
+	  <tr>
+        <th>Id prop.</th>
+		<th>Materia</th>
+		<th>Titolo</th>
+		<th>Vol</th>
+		<th>Autore</th>
+		<th>Editore</th>
+		<th>ISBN</th>
+		<th>Proprietario</th>
+		<th nowrap>Prezzo €</th>
+		<th nowrap>Sconto %</th>
+		<th nowrap>Scontato €</th>
+		<th>Vendi</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <tr data-ng-repeat="book in filteredBooks = (books | filter:search)">
+        <td>{{book.IdCustomer}}</td>
+		<td>{{book.Materia}}</td>
+		<td>{{book.Titolo}}</td>
+		<td><span ng-show="book.Volume !== undefined">{{book.Volume}}</span></td>
+		<td>{{book.Autore}}</td>
+		<td>{{book.Casa}}</td>
+		<td>{{book.Isbn}}</td>
+		<td><a href="#/showcustomer/{{book.IdCustomer}}">{{getOwner(book.IdCustomer)}}</a></td>
+		<td>{{book.Prezzo}}</td>
+		<td>{{book.Discount}}</td>
+		<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
+		<td><i class="fa fa-repeat fa-2x" ng-click="sell(book.id)"></i></td>
+	  </tr>
+	</tbody>
+  </table>
+  <h3 data-ng-hide="filteredBooks.length" style="text-align:center;">Nessuna corrispondenza / archivio vuoto</h3>
 </div>

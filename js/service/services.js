@@ -1,3 +1,4 @@
+var db = db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024);
 usatoApp.factory('utility', function() {
 	// Download html of a URL specified page
 	return {
@@ -28,16 +29,13 @@ usatoApp.factory('utility', function() {
         restore: function() {
             db.transaction(function(tx) {
 	            // development
-	            tx.executeSql('DROP TABLE STORE');
-	            tx.executeSql('DROP TABLE CUSTOMERS');
-	            tx.executeSql('DROP TABLE BOOKS');
+	            tx.executeSql('DROP TABLE IF EXISTS STORE');
+	            tx.executeSql('DROP TABLE IF EXISTS CUSTOMERS');
+	            tx.executeSql('DROP TABLE IF EXISTS BOOKS');
 	            // development
-	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	                      'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
-	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	                      'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
-	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	                      'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
                 // restore from files
                 var files = ['store.json', 'customers.json', 'books.json'];
                 for(var i = 0; i < files.length; i++) {
@@ -52,16 +50,13 @@ usatoApp.factory('utility', function() {
         wipe: function() {
             db.transaction(function(tx) {
 	            // development
-	            tx.executeSql('DROP TABLE STORE');
-	            tx.executeSql('DROP TABLE CUSTOMERS');
-	            tx.executeSql('DROP TABLE BOOKS');
+	            tx.executeSql('DROP TABLE IF EXISTS STORE');
+	            tx.executeSql('DROP TABLE IF EXISTS CUSTOMERS');
+	            tx.executeSql('DROP TABLE IF EXISTS BOOKS');
 	            // development
-	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	                      'STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
-	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	                      'CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
-	            tx.executeSql('CREATE TABLE IF NOT EXISTS '+
-	 	                      'BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS STORE (id INTEGER PRIMARY KEY ASC, Materia TEXT, Isbn TEXT UNIQUE, Autore TEXT, Titolo TEXT, Volume INTEGER, Casa TEXT, Prezzo REAL)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)');
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)');
                 fs.unlinkSync('./store_backup/store.json');
                 fs.unlinkSync('./store_backup/books.json');
                 fs.unlinkSync('./store_backup/customers.json');

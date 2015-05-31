@@ -38,8 +38,8 @@
 						<td>{{book.Casa}}</td>
 						<td>{{book.Isbn}}</td>
 						<td>{{book.Prezzo}}</td>
-						<td>{{book.Discount}}</td>
-						<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
+						<td>75</td>
+						<td>{{getDiscount(book.Prezzo, 75)}}</td>
 						<td><i class="fa fa-times fa-2x" ng-click="deleteCopy(book.id)"></i></td>
 					</tr>
 				</tbody>
@@ -75,8 +75,8 @@
 						<td>{{book.Casa}}</td>
 						<td>{{book.Isbn}}</td>
 						<td>{{book.Prezzo}}</td>
-						<td>{{book.Discount}}</td>
-						<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
+						<td>75</td>
+						<td>{{getDiscount(book.Prezzo, 75)}}</td>
 						<td><i class="fa fa-repeat fa-2x" ng-click="restore(book.id)"></i></td>
 					</tr>
 				</tbody>
