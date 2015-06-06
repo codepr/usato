@@ -14,7 +14,7 @@
 	</thead>
 	<tbody>
 		<tr data-ng-repeat="customer in filteredCustomers = (customers | filter:searchCustomer)">
-			<td>{{customer.id}}</td>
+			<td style="font-weight:700;font-size:1.1em;">{{customer.id}}</td>
 			<td><a href="#/showcustomer/{{customer.id}}">{{customer.Nome}}</a></td>
 			<td>{{customer.Telefono}}</td>
 			<td><i class="fa fa-times fa-2x" ng-click="deleteCustomer(customer.id)"></i></td>

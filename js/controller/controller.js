@@ -231,7 +231,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams, utility)
 				if(!results.rows.length) {
 					tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 						[newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo]);
-                    utility.writeBackup('store','INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+newBook.Materia+','+newBook.Isbn+','+newBook.Autore+','+newBook.Titolo+','+newBook.Volume+','+newBook.Casa+ ','+newBook.Prezzo+')');
+                    utility.writeBackup('store','INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(newBook.Materia)+'","'+newBook.Isbn+'","'+utility.eq(newBook.Autore)+'","'+utility.eq(newBook.Titolo)+'","'+newBook.Volume+'","'+utility.eq(newBook.Casa)+ '","'+newBook.Prezzo+'")');
                 }
 			});
 		});
@@ -240,7 +240,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams, utility)
 		$('#success-alert').fadeTo(2000, 500).fadeOut(1000, function() {
 			$('#success-alert').hide();
 		});
-        utility.writeBackup('books', 'INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ('+newBook.Isbn+','+id+','+newBook.Discount+','+0+')');
+        utility.writeBackup('books', 'INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ("'+newBook.Isbn+'","'+id+'","'+newBook.Discount+'","'+0+'")');
 	};
 });
 // customer addition managing and form validations
@@ -252,7 +252,7 @@ usatoApp.controller('addCustomerController', function($scope, $location, utility
 		});
 		// refresh customers scope variable
 		$scope.$emit('refresh');
-        utility.writeBackup('customers', 'INSERT INTO CUSTOMERS (Nome, Telefono) VALUES ('+name+','+phone+')');
+        utility.writeBackup('customers', 'INSERT INTO CUSTOMERS (Nome, Telefono) VALUES ("'+utility.eq(name)+'","'+phone+'")');
 		$location.path('/customers');
 	};
 });
@@ -266,7 +266,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
 			tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 				[book.Materia, book.Isbn, book.Autore, book.Titolo, book.Vol, book.Casa, book.Prezzo]);
             $scope.$emit('refreshStore');
-            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ('+book.Materia+','+book.Isbn+','+book.Autore+','+book.Titolo+','+book.Vol+','+book.Casa+','+book.Prezzo+')');
+            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(book.Materia)+'","'+book.Isbn+'","'+utility.eq(book.Autore)+'","'+utility.eq(book.Titolo)+'","'+book.Vol+'","'+utility.eq(book.Casa)+'","'+book.Prezzo+'")');
 		});
 		// call alert for success operation
 		$('#success-alert-arc').fadeTo(2000, 500).fadeOut(1000, function() {
@@ -336,7 +336,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
                             tbObj[i].Titolo = (tbObj[i].Titolo).replace(/\uFFFD/g, 'A\'');
 							tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES(?, ?, ?, ?, ?, ?, ?)',
 								[tbObj[i].Materia,tbObj[i].Isbn,tbObj[i].Autore,tbObj[i].Titolo,tbObj[i].Volume,tbObj[i]['Casa Editrice'],tbObj[i].Prezzo]);
-                            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES('+tbObj[i].Materia+','+tbObj[i].Isbn+','+tbObj[i].Autore+','+tbObj[i].Titolo+','+tbObj[i].Volume+','+tbObj[i]['Casa Editrice']+','+tbObj[i].Prezzo+')\n');
+                            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES("'+utility.eq(tbObj[i].Materia)+'","'+tbObj[i].Isbn+'","'+utility.eq(tbObj[i].Autore)+'","'+utility.eq(tbObj[i].Titolo)+'","'+tbObj[i].Volume+'","'+utility.eq(tbObj[i]['Casa Editrice'])+'","'+tbObj[i].Prezzo+'")\n');
 						}
 						// reload books into scope variable
 						$scope.$emit('refreshStore');
@@ -367,10 +367,22 @@ usatoApp.controller('settingsController', function($scope, utility, usatoAppSett
 					if(/..\/public\/GV_290514/.test($(link).attr('href')))
 					col.push($(link).attr('href'));
 				});
-				alert(JSON.stringify(col[0]));
+				alert(JSON.stringify(col[1]));
 			}
 		});
 	};
+    // init db, first time
+    $scope.init = function() {
+        var c = confirm("Verrà creato un nuovo database, i dati esistenti saranno cancellati.\nProcedere?");
+        if(c == true) {
+            utility.init();
+            $scope.$emit('refresh');
+            $scope.$emit('refreshStats');
+            $scope.$emit('refreshBooks');
+            $scope.$emit('refreshStore');
+            $scope.$emit('refreshSold');
+        }
+    };
     // total wipe rest
     $scope.wipe = function() {
         var c = confirm("Reset completo dell'applicazione:\nOgni dato sarà cancellato definitivamente.\nProcedere?");
@@ -385,15 +397,19 @@ usatoApp.controller('settingsController', function($scope, utility, usatoAppSett
     };
     // restore from files
     $scope.fullRestore = function() {
-        // var c = confirm("Ripristino dei dati dell'applicazione:\nOgni dato sarà sovrascritto.\nProcedere?");
-        // if(c == true) {
-        //     utility.restore();
-        //     $scope.$emit('refresh');
-        //     $scope.$emit('refreshStats');
-        //     $scope.$emit('refreshBooks');
-        //     $scope.$emit('refreshStore');
-        //     $scope.$emit('refreshSold');
-        // }
+        var c = confirm("Ripristino dei dati dell'applicazione:\nOgni dato sarà sovrascritto.\nProcedere?");
+        if(c == true) {
+            utility.restore();
+            $scope.$emit('refresh');
+            $scope.$emit('refreshStats');
+            $scope.$emit('refreshBooks');
+            $scope.$emit('refreshStore');
+            $scope.$emit('refreshSold');
+        }
+    };
+    // active debug tools
+    $scope.openDebug = function() {
+        require('nw.gui').Window.get().showDevTools();
     };
 });
     

@@ -21,7 +21,7 @@
 	</thead>
 	<tbody>
 	  <tr data-ng-repeat="book in filteredBooks = (books | filter:search)">
-        <td>{{book.IdCustomer}}</td>
+        <td style="font-weight:700;font-size:1.1em;">{{book.IdCustomer}}</td>
 		<td>{{book.Materia}}</td>
 		<td>{{book.Titolo}}</td>
 		<td><span ng-show="book.Volume !== undefined">{{book.Volume}}</span></td>
@@ -31,7 +31,7 @@
 		<td><a href="#/showcustomer/{{book.IdCustomer}}">{{getOwner(book.IdCustomer)}}</a></td>
 		<td>{{book.Prezzo}}</td>
 		<td>{{book.Discount}}</td>
-		<td>{{getDiscount(book.Prezzo, book.Discount)}}</td>
+		<td style="font-weight:700;font-size:1.1em;">{{getDiscount(book.Prezzo, book.Discount)}}</td>
 		<td><i class="fa fa-repeat fa-2x" ng-click="sell(book.id)"></i></td>
 	  </tr>
 	</tbody>
