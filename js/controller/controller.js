@@ -141,8 +141,8 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
         if(c == true) {
 		    db.transaction(function(tx) {
 			    tx.executeSql('DELETE FROM BOOKS WHERE IdCustomer = ? AND Id = ?', [$routeParams.id, idc]);
-                $scope.$emit('refreshReserved');
 		    });
+            $scope.$emit('refreshReserved');
         }
 	};
 	// restore a book from sell list to unsell
@@ -152,13 +152,13 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
 		    db.transaction(function(tx) {
 			    tx.executeSql('UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = ? AND id = ?', [$routeParams.id, bid]);
                 utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = '+$routeParams.id+' AND id = '+bid+'');
-                // refresh general sold list
-		        $scope.$emit('refreshSold');
-		        // refresh sold list
-                $scope.soldBooksByMe = null;
-		        usatoAppCustomerFactory.soldBooksById($routeParams.id).then(function(sb) {
-			        $scope.soldBooksByMe = sb;
-		        });
+		    });
+            // refresh general sold list
+		    $scope.$emit('refreshSold');
+		    // refresh sold list
+            $scope.soldBooksByMe = null;
+		    usatoAppCustomerFactory.soldBooksById($routeParams.id).then(function(sb) {
+			    $scope.soldBooksByMe = sb;
 		    });
         }
 	};
