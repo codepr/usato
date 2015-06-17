@@ -1,2 +1,6 @@
 * USATO
-Desktop application aimed to library products management. For local staraging it uses WebSQL database and IndexedDB.
+Desktop application aimed to library products management.
+** Features
+- Node-Webkit
+- Angular.js
+- WebSQL / IndexedDB
