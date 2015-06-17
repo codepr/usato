@@ -1,4 +1,4 @@
-var db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024);
+var db = openDatabase('usato', '1.0', 'Usato database', 50 * 1024 * 1024);
 usatoApp.factory('utility', function() {
 	// Download html of a URL specified page
 	return {

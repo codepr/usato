@@ -1,5 +1,5 @@
 var http = require('http'),
-    db = openDatabase('usato', '1.0', 'Usato database', 5 * 1024 * 1024),
+    db = openDatabase('usato', '1.0', 'Usato database', 50 * 1024 * 1024),
     bdb = require('diskdb'),
     fs = require('fs'),
     pb = require('pretty-bytes');
@@ -410,6 +410,25 @@ usatoApp.controller('settingsController', function($scope, utility, usatoAppSett
     // active debug tools
     $scope.openDebug = function() {
         require('nw.gui').Window.get().showDevTools();
+    };
+    // dev tool
+    $scope.genRngCustomers = function() {
+        for(var i = 0; i < 4000; i++) {
+            db.transaction(function(tx) {
+                tx.executeSql("INSERT INTO CUSTOMERS(Nome, Telefono) VALUES(?, ?)", ["Mario", 3469086783], function(tx) {
+                    console.log("Random customer succesfully inserted.");
+                }, function(tx, err) {
+                    console.log("Error inserting random customer " + err.message);
+                });
+                // books
+                tx.executeSql("INSERT INTO BOOKS(Isbn, IdCustomer, Discount, Sold) VALUES(?, ?, ?, )?", ["213231239213","3", "23", 0], function(tx) {
+                    console.log("Random book succesfully inserted.");
+                }, function(tx, err) {
+                    console.log("Error inserting random book " + err.message);
+                });
+                
+            });
+        }
     };
 });
     
