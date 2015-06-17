@@ -1,0 +1,2 @@
+* USATO
+Desktop application aimed to library products management. For local staraging it uses WebSQL database and IndexedDB

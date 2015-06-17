@@ -1,7 +1,7 @@
 {
   "name": "Usato",
   "version": "1.0.0",
-  "description": "Applicazione desktop per gestione prodotti di libreria usati.",
+  "description": "Desktop application aimed to library products management.",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
