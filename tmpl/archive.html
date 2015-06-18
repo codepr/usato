@@ -18,6 +18,8 @@
 				<th>Editore</th>
 				<th>ISBN</th>
 				<th nowrap>Prezzo €</th>
+                <th></th>
+                <th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,6 +31,8 @@
 				<td>{{book.Casa}}</td>
 				<td>{{book.Isbn}}</td>
 				<td>{{book.Prezzo}}</td>
+                <td><a href="#/alterbook/{{book.id}}"><i class="fa fa-pencil fa-2x"></i></a></td>
+                <td><i class="fa fa-times fa-2x" ng-click="deleteBookFromStore(book.id)"></i></td>
 			</tr>
 		</tbody>
 	</table>

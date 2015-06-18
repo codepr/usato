@@ -16,7 +16,11 @@ usatoApp.factory('utility', function() {
 			});
 		},
         eq: function(str) {
-            return str.replace(/['"]/g, "\'");
+            if(typeof str === 'undefined') {
+                return '';
+            } else {
+                return str.replace(/['"]/g, "\'");
+            }
         },
         writeBackup: function (collection, text) {
             bdb.connect('store_backup', [collection]);

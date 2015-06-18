@@ -1,0 +1,6 @@
+* USATO
+Desktop application aimed to library products management.
+** Features
+- Node-Webkit
+- Angular.js
+- WebSQL / IndexedDBs

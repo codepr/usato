@@ -24,7 +24,10 @@ usatoApp.config(function($routeProvider) {
 		}).when('/addtoarchive', {
 			templateUrl: 'tmpl/addtoarchive.html',
 			controller: 'archiveController'
-		}).when('/settings', {
+		}).when('/alterbook/:id', {
+            templateUrl: 'tmpl/alterbook.html',
+            controller: 'alterArchiveController'
+        }).when('/settings', {
             templateUrl: 'tmpl/settings.html',
             controller: 'settingsController'
         }).otherwise({
