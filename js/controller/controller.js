@@ -568,7 +568,7 @@ usatoApp.controller('settingsController', function($scope, utility, usatoAppSett
 					if(/..\/public\/GV_290514/.test($(link).attr('href')))
 					col.push($(link).attr('href'));
 				});
-				alert(JSON.stringify(col[1]));
+				console.log(JSON.stringify(col[1]));
 			}
 		});
 	};
