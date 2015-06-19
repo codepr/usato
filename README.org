@@ -5,7 +5,7 @@ Desktop application aimed to library products management.
 - Angular.js
 - WebSQL / IndexedDB
 ** Installation
-#+BEGIN_SRC javascript
+#+BEGIN_SRC bash
 $ clone https://github.com/codepr/usato
 #+END_SRC
 ** Usage
