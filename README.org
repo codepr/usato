@@ -4,3 +4,11 @@ Desktop application aimed to library products management.
 - Node-Webkit
 - Angular.js
 - WebSQL / IndexedDB
+** Installation
+~
+clone https://github.com/codepr/usato
+~
+** Usage
+The application run under Node-Webkit framework, you can use nw.js to run it and nwbuild to create a portable executable for every desired platform.
+** Release History
+- 1.0.0 Initial release

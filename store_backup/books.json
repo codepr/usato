@@ -1,1 +1,1 @@
-[]
+[{"query":"INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES (\"331231231231\",\"1\",\"22\",\"0\")","_id":"5f1da85206d3468c87feb1e7e897a91a"},{"query":"UPDATE BOOKS SET Sold = 1 WHERE id = 1","_id":"802a6e93cbe84b89bcc3a90fed566816"},{"query":"UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = 1 AND id = 1","_id":"5765ff14b8b14cc5a29d8e64b22b6a3f"}]

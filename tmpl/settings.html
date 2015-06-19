@@ -1,7 +1,7 @@
 <div class="table-container">
   <h2>Impostazioni</h2>
   <hr>
-  <h5>Backup files</h5>
+  <h5><strong>Backup files</strong></h5>
   <table class="table stretch">
     <thead>
       <tr>
@@ -16,12 +16,19 @@
       </tr>
     </tbody>
   </table>
-  <h5>Gestione database</h5>
-  <button class="btn btn-danger" ng-click="init()">Inizilizza database</button>
-  <button class="btn btn-danger" ng-click="wipe()">&#10006; Reset completo</button>
-  <button class="btn btn-warning" ng-click="openDebug()">Debug tools</button>
-  <button class="btn btn-warning" ng-click="getLinks()">Links</button>
-<!--  <button class="btn btn-warning" ng-click="genRngCustomers()">RngCustomers</button> -->
-  <h5>Opzioni ripristino</h5>
-  <button class="btn btn-warning" ng-click="fullRestore()">Ripristino</button>
+  <h5><strong>Gestione database</strong></h5>
+  <div class="optgroup">
+      <button class="btn btn-danger" ng-click="init()">Inizializza database</button>
+      <button class="btn btn-danger" ng-click="wipe()">&#10006; Reset completo</button>
+  </div>
+  <h5><strong>Opzioni ripristino</strong></h5>
+  <div class="optgroup">
+      <button class="btn btn-warning" ng-click="fullRestore()">Ripristino</button>
+  </div>
+  <h5><strong>Opzioni amministrative riservate</strong></h5>
+  <div class="optgroup">
+      <button class="btn btn-warning" ng-click="openDebug()">Debug tools</button>
+      <button class="btn btn-warning" ng-click="getLinks()">Links</button>
+      <!--  <button class="btn btn-warning" ng-click="genRngCustomers()">RngCustomers</button> -->
+  </div>
 </div>

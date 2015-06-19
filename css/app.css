@@ -40,3 +40,4 @@ i.fa.fa-pencil { color:rgb(0,0,0); cursor:pointer; }
 .btn.btn-danger:hover,
 .btn.btn-success:hover { background: rgba(0,0,0,.7); border-color: rgba(0,0,0,.7); }
 .stretch { width:30%; }
+.optgroup { padding: 15px 0; }

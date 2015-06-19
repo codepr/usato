@@ -15,6 +15,13 @@ usatoApp.factory('utility', function() {
 				callback(null);
 			});
 		},
+        isInt: function(value) {
+            if(isNaN(value)) {
+                return false;
+            }
+            var x = parseFloat(value);
+            return (x | 0) === x;
+        },
         eq: function(str) {
             if(typeof str === 'undefined') {
                 return '';
@@ -199,7 +206,7 @@ usatoApp.factory('usatoAppCustomerFactory', function($resource, $q) {
                 function checkResults(r) {
                     for(var i = 0; i < r.length; i++) {
                         tx.executeSql('SELECT s.Titolo, s.Autore, s.Casa, s.Isbn, s.Materia, s.Volume, s.Prezzo, b.Discount, b.IdCustomer, b.id FROM STORE s, BOOKS b WHERE s.Isbn = ? AND b.Isbn= ? AND b.IdCustomer = ? AND b.id = ?', [r.item(i).Isbn, r.item(i).Isbn, id, r.item(i).id], function(tx, resuz) {
-                            for(var j = 0; j < resuz.rows.length; j++) 
+                            for(var j = 0; j < resuz.rows.length; j++)
                                 arr.push(resuz.rows.item(j));
                             deferred.resolve(arr);
                         });
