@@ -113,6 +113,9 @@ usatoApp.controller('customersController', function($scope, utility) {
         $('.table-container').hide(0).fadeIn(400);
     });
 	$scope.$emit('refreshBooks');
+    setTimeout(function() {
+        $scope.$apply();
+    }, 500);
 	// remove customer and save it persistencly
 	$scope.deleteCustomer = function(identifier) {
         var c = confirm("Cancellare il cliente selezionato dal database? Tutti i libri allegati al cliente andranno cancellati.");
@@ -306,7 +309,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams, utility)
                     }
 					tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 						[newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo]);
-                    utility.writeBackup('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(newBook.Materia)+'","'+newBook.Isbn+'","'+utility.eq(newBook.Autore)+'","'+utility.eq(newBook.Titolo)+'","'+newBook.Volume+'","'+utility.eq(newBook.Casa)+ '","'+newBook.Prezzo+'")');
+                    utility.writeBackup('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(newBook.Materia)+'","'+newBook.Isbn+'","'+utility.eq(newBook.Autore)+'","'+utility.eq(newBook.Titolo)+'","'+newBook.Volume+'","'+utility.eq(newBook.Casa)+ '","'+newBook.Prezzo+'")');
                 }
 			}, function(tx, err) {
                 console.log("Error adding book to customer: " + err.message);
@@ -317,7 +320,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams, utility)
 		$('#success-alert').fadeTo(2000, 500).fadeOut(1000, function() {
 			$('#success-alert').hide();
 		});
-        utility.writeBackup('INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ("'+newBook.Isbn+'","'+id+'","'+newBook.Discount+'","'+0+'")');
+        utility.writeBackup('INSERT OR IGNORE INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ("'+newBook.Isbn+'","'+id+'","'+newBook.Discount+'","'+0+'")');
 	};
 });
 // customer addition managing and form validations
@@ -342,7 +345,7 @@ usatoApp.controller('addCustomerController', function($scope, $location, utility
 		});
 		// refresh customers scope variable
 		$scope.$emit('refresh');
-        utility.writeBackup('INSERT INTO CUSTOMERS (Nome, Telefono) VALUES ("'+utility.eq(name)+'","'+phone+'")');
+        utility.writeBackup('INSERT OR IGNORE INTO CUSTOMERS (Nome, Telefono) VALUES ("'+utility.eq(name)+'","'+phone+'")');
 		$location.path('/customers');
 	};
 });

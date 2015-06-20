@@ -49,6 +49,28 @@ usatoApp.factory('utility', function() {
             store.add(q);
         },
         restore: function() {
+            db.transaction(function(tx) {
+                tx.executeSql('DROP TABLE IF EXISTS CUSTOMERS', [], function() {
+                    console.log('Succesfully dropped table CUSTOMERS');
+                }, function(tx, err) {
+                    console.log('Error dropping CUSTOMERS: ' + err.message);
+                });
+	            tx.executeSql('DROP TABLE IF EXISTS BOOKS', [], function() {
+                    console.log('Succesfully dropped table BOOKS');
+                }, function(tx, err) {
+                    console.log('Error dropping BOOKS: ' + err.message);
+                });
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS CUSTOMERS (id INTEGER PRIMARY KEY ASC, Nome TEXT, Telefono TEXT)', [], function() {
+                    console.log('Succesfully created table CUSTOMERS');
+                }, function(tx, err) {
+                    console.log('Error creating CUSTOMERS: ' + err.message);
+                });
+	            tx.executeSql('CREATE TABLE IF NOT EXISTS BOOKS (id INTEGER PRIMARY KEY ASC, Isbn TEXT, IdCustomer INTEGER, Discount INTEGER, Sold INTEGER)', [], function(){
+                    console.log('Succesfully created table BOOKS');
+                }, function(tx, err) {
+                    console.log('Error creating BOOKS: ' + err.message);
+                });
+            });
             function insert(data) {
                 db.transaction(function(tx) {
                     data.forEach(function(item) {
