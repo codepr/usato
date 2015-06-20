@@ -1,8 +1,5 @@
 var http = require('http'),
-    db = openDatabase('usato', '1.0', 'Usato database', 50 * 1024 * 1024),
-    bdb = require('diskdb'),
-    fs = require('fs'),
-    pb = require('pretty-bytes');
+    db = openDatabase('usato', '1.0', 'Usato database', 50 * 1024 * 1024);
 // main controller
 usatoApp.controller('MainController', function($scope, utility, usatoAppFactory, usatoAppCustomerFactory, $location) {
     $(document).ready(function() {
@@ -106,7 +103,7 @@ usatoApp.controller('MainController', function($scope, utility, usatoAppFactory,
                 // reload sold
 		        $scope.$emit('refreshSold');
 		    });
-            utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 1 WHERE id = '+bid+'');
+            utility.writeBackup('UPDATE BOOKS SET Sold = 1 WHERE id = '+bid+'');
         }
 	};
 });
@@ -183,7 +180,7 @@ usatoApp.controller('showCustomerController', function($scope, $routeParams, usa
         if(c == true) {
 		    db.transaction(function(tx) {
 			    tx.executeSql('UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = ? AND id = ?', [$routeParams.id, bid]);
-                utility.writeBackup('books', 'UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = '+$routeParams.id+' AND id = '+bid+'');
+                utility.writeBackup('UPDATE BOOKS SET Sold = 0 WHERE IdCustomer = '+$routeParams.id+' AND id = '+bid+'');
 		    });
             // refresh general sold list
 		    $scope.$emit('refreshSold');
@@ -309,7 +306,7 @@ usatoApp.controller('addBookController', function($scope, $routeParams, utility)
                     }
 					tx.executeSql('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 						[newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo]);
-                    utility.writeBackup('store','INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(newBook.Materia)+'","'+newBook.Isbn+'","'+utility.eq(newBook.Autore)+'","'+utility.eq(newBook.Titolo)+'","'+newBook.Volume+'","'+utility.eq(newBook.Casa)+ '","'+newBook.Prezzo+'")');
+                    utility.writeBackup('INSERT INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(newBook.Materia)+'","'+newBook.Isbn+'","'+utility.eq(newBook.Autore)+'","'+utility.eq(newBook.Titolo)+'","'+newBook.Volume+'","'+utility.eq(newBook.Casa)+ '","'+newBook.Prezzo+'")');
                 }
 			}, function(tx, err) {
                 console.log("Error adding book to customer: " + err.message);
@@ -320,11 +317,12 @@ usatoApp.controller('addBookController', function($scope, $routeParams, utility)
 		$('#success-alert').fadeTo(2000, 500).fadeOut(1000, function() {
 			$('#success-alert').hide();
 		});
-        utility.writeBackup('books', 'INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ("'+newBook.Isbn+'","'+id+'","'+newBook.Discount+'","'+0+'")');
+        utility.writeBackup('INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES ("'+newBook.Isbn+'","'+id+'","'+newBook.Discount+'","'+0+'")');
 	};
 });
 // customer addition managing and form validations
 usatoApp.controller('addCustomerController', function($scope, $location, utility) {
+    $scope.customer = {};
     $(document).ready(function() {
         $('.table-container').hide(0).fadeIn(400);
     });
@@ -344,7 +342,7 @@ usatoApp.controller('addCustomerController', function($scope, $location, utility
 		});
 		// refresh customers scope variable
 		$scope.$emit('refresh');
-        utility.writeBackup('customers', 'INSERT INTO CUSTOMERS (Nome, Telefono) VALUES ("'+utility.eq(name)+'","'+phone+'")');
+        utility.writeBackup('INSERT INTO CUSTOMERS (Nome, Telefono) VALUES ("'+utility.eq(name)+'","'+phone+'")');
 		$location.path('/customers');
 	};
 });
@@ -413,7 +411,7 @@ usatoApp.controller('alterArchiveController', function($scope, utility, $routePa
 			tx.executeSql('UPDATE STORE SET Materia = ?, Isbn = ?, Autore = ?, Titolo = ?, Volume = ?, Casa = ?, Prezzo = ? WHERE id = ?',
                           [newBook.Materia, newBook.Isbn, newBook.Autore, newBook.Titolo, newBook.Volume, newBook.Casa, newBook.Prezzo, id],
                           function(tx, results) {
-                              utility.writeBackup('store','UPDATE STORE SET Materia = "'+utility.eq(newBook.Materia)+'", Isbn = "'+newBook.Isbn+'", Autore = "'+utility.eq(newBook.Autore)+'", Titolo = "'+utility.eq(newBook.Titolo)+'", Volume = "'+newBook.Volume+'", Casa = "'+utility.eq(newBook.Casa)+ '", Prezzo = "'+newBook.Prezzo+'" WHERE id = "'+id+'"');
+                              utility.writeBackup('UPDATE STORE SET Materia = "'+utility.eq(newBook.Materia)+'", Isbn = "'+newBook.Isbn+'", Autore = "'+utility.eq(newBook.Autore)+'", Titolo = "'+utility.eq(newBook.Titolo)+'", Volume = "'+newBook.Volume+'", Casa = "'+utility.eq(newBook.Casa)+ '", Prezzo = "'+newBook.Prezzo+'" WHERE id = "'+id+'"');
                               $scope.$emit('refreshStore');
 			              }, function(tx, err) {
                               console.log("Error updating book to customer: " + err.message);
@@ -423,7 +421,7 @@ usatoApp.controller('alterArchiveController', function($scope, utility, $routePa
 		$('#success-alert').fadeTo(2000, 500).fadeOut(1000, function() {
 			$('#success-alert').hide();
 		});
-        utility.writeBackup('books', 'UPDATE BOOKS SET Isbn = "'+newBook.Isbn+'", IdCustomer = "'+id+'", Discount = "'+newBook.Discount+'", Sold = "'+0+'"');
+        utility.writeBackup('UPDATE BOOKS SET Isbn = "'+newBook.Isbn+'", IdCustomer = "'+id+'", Discount = "'+newBook.Discount+'", Sold = "'+0+'"');
     };
 });
 // controller for archive page, download and managing of books archive
@@ -464,7 +462,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
 			tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES (?, ?, ?, ?, ?, ?, ?)',
 				[book.Materia, book.Isbn, book.Autore, book.Titolo, book.Vol, book.Casa, book.Prezzo]);
             $scope.$emit('refreshStore');
-            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(book.Materia)+'","'+book.Isbn+'","'+utility.eq(book.Autore)+'","'+utility.eq(book.Titolo)+'","'+book.Vol+'","'+utility.eq(book.Casa)+'","'+book.Prezzo+'")');
+            utility.writeBackup('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES ("'+utility.eq(book.Materia)+'","'+book.Isbn+'","'+utility.eq(book.Autore)+'","'+utility.eq(book.Titolo)+'","'+book.Vol+'","'+utility.eq(book.Casa)+'","'+book.Prezzo+'")');
 		});
 		// call alert for success operation
 		$('#success-alert-arc').fadeTo(2000, 500).fadeOut(1000, function() {
@@ -534,7 +532,7 @@ usatoApp.controller('archiveController', function($scope, utility) {
                             tbObj[i].Titolo = (tbObj[i].Titolo).replace(/\uFFFD/g, 'A\'');
 							tx.executeSql('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES(?, ?, ?, ?, ?, ?, ?)',
 								[tbObj[i].Materia,tbObj[i].Isbn,tbObj[i].Autore,tbObj[i].Titolo,tbObj[i].Volume,tbObj[i]['Casa Editrice'],tbObj[i].Prezzo]);
-                            utility.writeBackup('store','INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES("'+utility.eq(tbObj[i].Materia)+'","'+tbObj[i].Isbn+'","'+utility.eq(tbObj[i].Autore)+'","'+utility.eq(tbObj[i].Titolo)+'","'+tbObj[i].Volume+'","'+utility.eq(tbObj[i]['Casa Editrice'])+'","'+tbObj[i].Prezzo+'")\n');
+                            utility.writeBackup('INSERT OR IGNORE INTO STORE (Materia, Isbn, Autore, Titolo, Volume, Casa, Prezzo) VALUES("'+utility.eq(tbObj[i].Materia)+'","'+tbObj[i].Isbn+'","'+utility.eq(tbObj[i].Autore)+'","'+utility.eq(tbObj[i].Titolo)+'","'+tbObj[i].Volume+'","'+utility.eq(tbObj[i]['Casa Editrice'])+'","'+tbObj[i].Prezzo+'")\n');
 						}
 						// reload books into scope variable
 						$scope.$emit('refreshStore');

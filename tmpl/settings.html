@@ -1,34 +1,23 @@
 <div class="table-container">
-  <h2>Impostazioni</h2>
-  <hr>
-  <h5><strong>Backup files</strong></h5>
-  <table class="table stretch">
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr data-ng-repeat="stat in stats">
-        <td>{{stat.file}}</td>
-        <td>{{stat.size}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5><strong>Gestione database</strong></h5>
-  <div class="optgroup">
-      <button class="btn btn-danger" ng-click="init()">Inizializza database</button>
-      <button class="btn btn-danger" ng-click="wipe()">&#10006; Reset completo</button>
-  </div>
-  <h5><strong>Opzioni ripristino</strong></h5>
-  <div class="optgroup">
-      <button class="btn btn-warning" ng-click="fullRestore()">Ripristino</button>
-  </div>
-  <h5><strong>Opzioni amministrative riservate</strong></h5>
-  <div class="optgroup">
-      <button class="btn btn-warning" ng-click="openDebug()">Debug tools</button>
-      <button class="btn btn-warning" ng-click="getLinks()">Links</button>
-      <!--  <button class="btn btn-warning" ng-click="genRngCustomers()">RngCustomers</button> -->
-  </div>
+    <h2>Impostazioni</h2>
+    <hr>
+    <h5><strong>Backup size</strong></h5>
+    <div class="optgroup">
+        <p>{{stats}}</p>
+    </div>
+    <h5><strong>Gestione database</strong></h5>
+    <div class="optgroup">
+        <button class="btn btn-danger" ng-click="init()">Inizializza database</button>
+        <button class="btn btn-danger" ng-click="wipe()">&#10006; Reset completo</button>
+    </div>
+    <h5><strong>Opzioni ripristino</strong></h5>
+    <div class="optgroup">
+        <button class="btn btn-warning" ng-click="fullRestore()">Ripristino</button>
+    </div>
+    <h5><strong>Opzioni amministrative riservate</strong></h5>
+    <div class="optgroup">
+        <button class="btn btn-warning" ng-click="openDebug()">Debug tools</button>
+        <button class="btn btn-warning" ng-click="getLinks()">Links</button>
+        <!--  <button class="btn btn-warning" ng-click="genRngCustomers()">RngCustomers</button> -->
+    </div>
 </div>

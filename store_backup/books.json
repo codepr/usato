@@ -1,1 +1,1 @@
-[]
+[{"query":"INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES (\"9788808141354\",\"1\",\"10\",\"0\")","_id":"01590f31b748434f84f50973e801d8f9"},{"query":"INSERT INTO BOOKS (Isbn, IdCustomer, Discount, Sold) VALUES (\"9788808141354\",\"1\",\"20\",\"0\")","_id":"83d2758ace0842c1bef3f3a065a983cf"}]

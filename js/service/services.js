@@ -1,4 +1,18 @@
 var db = openDatabase('usato', '1.0', 'Usato database', 50 * 1024 * 1024);
+var idb,
+    req = indexedDB.open("BACKUP"),
+    pb = require('pretty-bytes');
+req.onsuccess = function(event) {
+    idb = event.target.result;
+};
+req.onerror = function(event) {
+    console.log("Error opening indexedDB: " + event.errorCode);
+};
+req.onupgradeneeded = function(event) {
+    console.log("openDb.onupgradeneeded.");
+    var store = event.currentTarget.result.createObjectStore("queries", { keypath: 'id', autoIncrement: true });
+    store.createIndex('query', 'query', { unique: false });
+};
 usatoApp.factory('utility', function() {
 	// Download html of a URL specified page
 	return {
@@ -29,33 +43,35 @@ usatoApp.factory('utility', function() {
                 return str.replace(/['"]/g, "\'");
             }
         },
-        writeBackup: function (collection, text) {
-            bdb.connect('store_backup', [collection]);
-            var q = {
-                query : text
-            };
-            var options = {
-                multi: false,
-                upsert: true
-            };
-            bdb[collection].update(q, q, options);
+        writeBackup: function (text) {
+            var q = { query : text };
+            var store = idb.transaction("queries", "readwrite").objectStore("queries");
+            store.add(q);
         },
         restore: function() {
-            db.transaction(function(tx) {
-                var files = ['store.json', 'customers.json', 'books.json'];
-                for(var i = 0; i < files.length; i++) {
-                    var data = fs.readFileSync('./store_backup/'+files[i]);
-                    var dt = JSON.parse(data);
-                    for(var j = 0; j < dt.length; j++) {
-                        console.log(dt[j].query);
-                        tx.executeSql(dt[j].query, [], function() {
-                            console.log('Successfully executed query');
+            function insert(data) {
+                db.transaction(function(tx) {
+                    data.forEach(function(item) {
+                        tx.executeSql(item.query, [], function() {
+                            console.log("Succesfully executed query from IndexedDB");
                         }, function(tx, err) {
-                            console.log('Error executing query: ' + err.message);
-                        });
-                    }
+                            console.log("Error executing query: " + err.message);
+                        });  
+                    });
+                });
+            };
+            var data = [];
+            var store = idb.transaction("queries").objectStore("queries");
+            store.openCursor().onsuccess = function(event) {
+                var cursor = event.target.result;
+                if(cursor) {
+                    data.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    console.log("No more entries");
+                    insert(data);
                 }
-            });
+            };
         },
         init: function() {
             db.transaction(function(tx) {
@@ -92,6 +108,14 @@ usatoApp.factory('utility', function() {
             });
         },
         wipe: function() {
+            var store = idb.transaction("queries", "readwrite").objectStore("queries");
+            var req = store.clear();
+            req.onsuccess = function(event) {
+                console.log("Bakcup store cleared.");
+            };
+            req.onerror = function(event) {
+                console.log("Error clearing backup store: " + event.errorCode);
+            };
             db.transaction(function(tx) {
                 tx.executeSql('DELETE FROM STORE', [], function() {
                     console.log('Successfully deleted STORE');
@@ -109,12 +133,6 @@ usatoApp.factory('utility', function() {
                     console.log('Error deleting BOOKS: ' + err.message);
                 });
             });
-            fs.unlinkSync('./store_backup/store.json');
-            fs.unlinkSync('./store_backup/books.json');
-            fs.unlinkSync('./store_backup/customers.json');
-            fs.writeFileSync('./store_backup/store.json', "[]");
-            fs.writeFileSync('./store_backup/books.json', "[]");
-            fs.writeFileSync('./store_backup/customers.json', "[]");
 	    }
     };
 });
@@ -246,13 +264,36 @@ usatoApp.factory('usatoAppSettingsFactory', function($resource, $q) {
     return {
         getStats: function() {
             var deferred = $q.defer();
-            var files = ['store.json', 'customers.json', 'books.json'];
-            var arr = [];
-            for(var i = 0; i < files.length; i++) {
-                sts = fs.statSync('./store_backup/'+files[i]);
-                arr.push({file:files[i], size:pb(sts['size'])});
-            }
-            deferred.resolve(arr);
+            var getSize = function(callback) {
+                var size = 0;
+                if(typeof idb !== 'undefined' && idb != null) {
+                    var store = idb.transaction("queries").objectStore("queries");
+                    store.openCursor().onsuccess = function(event) {
+                        var cursor = event.target.result;
+                        if(cursor) {
+                            var storedQuery = cursor.value;
+                            var json = JSON.stringify(storedQuery);
+                            size += json.length;
+                            cursor.continue();
+                        } else {
+                            callback(size, null);
+                        }
+                    };
+                } else {
+                    callback(null, null);
+                }
+            };
+            getSize(function(size, err) {
+                if(size > 0) {
+                    deferred.resolve(pb(size));
+                } else {
+                    console.log("Size is 0.");
+                }
+                if(err != null) {
+                    console.log("Error calculating size: " + err);
+                }
+                return 0;
+            });
             return deferred.promise;
         }
     };

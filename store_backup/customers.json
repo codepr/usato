@@ -1,1 +1,1 @@
-[]
+[{"query":"INSERT INTO CUSTOMERS (Nome, Telefono) VALUES (\"Paolo\",\"23232323\")","_id":"8716124b719544468ee8bf7b0a628e79"},{"query":"INSERT INTO CUSTOMERS (Nome, Telefono) VALUES (\"Lucai\",\"23213\")","_id":"a3d3912869dd454db3578fea110bbcf8"}]
