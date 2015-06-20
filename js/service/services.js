@@ -287,7 +287,7 @@ usatoApp.factory('usatoAppSettingsFactory', function($resource, $q) {
                 if(size > 0) {
                     deferred.resolve(pb(size));
                 } else {
-                    console.log("Size is 0.");
+                    deferred.resolve(pb(0));
                 }
                 if(err != null) {
                     console.log("Error calculating size: " + err);
