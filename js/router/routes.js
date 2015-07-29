@@ -18,6 +18,9 @@ usatoApp.config(function($routeProvider) {
 		}).when('/showcustomer/:id', {
 			templateUrl: 'tmpl/showcustomer.html',
 			controller: 'showCustomerController'
+		}).when('/altercustomer/:id', {
+			templateUrl: 'tmpl/altercustomer.html',
+			controller: 'alterCustomerController'
 		}).when('/archive', {
 			templateUrl: 'tmpl/archive.html',
 			controller: 'archiveController'
